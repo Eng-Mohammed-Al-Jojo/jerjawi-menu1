@@ -50,9 +50,9 @@ const ItemRow = React.memo(({ item, orderSystem, onClick }: Props) => {
         viewport={{ once: true, margin: "50px" }}
         className={`
           relative flex items-center justify-between w-full rounded-3xl border border-(--menu-border)
-          h-[100px] pr-28 pl-2 bg-(--menu-card-elevated) mb-8 mr-1
+          h-[100px] pr-28 pl-2 bg-(--menu-card-elevated) mb-1 mr-1
           transition-all duration-300 group shadow-soft
-          ${unavailable ? "opacity-60 grayscale mt-10 mb-10" : canOrder ? "hover:bg-(--menu-surface) cursor-pointer" : ""}
+          ${unavailable ? "opacity-60 grayscale mt-4 mb-4" : canOrder ? "hover:bg-(--menu-surface) cursor-pointer" : ""}
         `}
         onClick={handleOrderClick}
       >

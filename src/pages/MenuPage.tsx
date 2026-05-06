@@ -125,7 +125,7 @@ export default function MenuPage() {
         </section>
 
         {/* ✅ Menu */}
-        <div className="flex-1 w-full max-w-6xl mx-auto px-0 md:px-6 pb-24">
+        <div className="flex-1 w-full max-w-6xl mx-auto px-0 md:px-6">
           <Menu
             onLoadingChange={handleLoadingChange}
             onFeaturedCheck={setHasFeatured}
@@ -139,7 +139,7 @@ export default function MenuPage() {
 
       {/* Cart */}
       {isDataReady && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-0 right-6 z-50">
           <CartButton />
         </div>
       )}
