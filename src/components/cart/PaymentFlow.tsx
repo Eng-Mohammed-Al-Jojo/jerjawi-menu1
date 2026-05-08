@@ -8,8 +8,6 @@ import {
 } from "react-icons/fi";
 import type { PaymentMethod, PaymentRecord } from "../../types/payment";
 import { toast } from "react-hot-toast";
-import SafeImage from "../common/SafeImage";
-import { getAssetUrl } from "../../utils/assetUtils";
 
 type Step = "SELECT" | "FORM" | "CONFIRM" | "RESULT";
 
@@ -43,16 +41,16 @@ export default function PaymentFlow({
 
     const handleSelectMethod = (method: PaymentMethod) => {
         onSelectMethod(method);
-        if (method.type === 'cash') {
-            // Immediate submission for cash with null details
+        if (!method.showPaymentDetails) {
+            // Immediate submission if payment details screen is disabled
             onSubmit({
-                methodName: method.name,
+                methodName: method.name || method.label,
                 senderAccountName: null,
                 senderAccountNumber: null,
                 receiverAccountName: null,
                 receiverAccountNumber: null,
                 senderBankOrWallet: null,
-                notes: "Cash Payment"
+                notes: "Direct Confirmation"
             }, method);
             return; // EXIT IMMEDIATELY - Bypass all steps
         } else {
@@ -132,14 +130,13 @@ export default function PaymentFlow({
                                     className="relative p-6 rounded-4xl border-2 border-gray-100 bg-white hover:border-primary hover:bg-primary/5 transition-all flex flex-col items-center gap-4 group shadow-soft hover:shadow-premium active:scale-95"
                                 >
                                     <div className="w-20 h-20 rounded-3xl overflow-hidden bg-white shadow-soft flex items-center justify-center border border-gray-50 shrink-0 group-hover:scale-105 transition-transform duration-500">
-                                        <SafeImage
-                                            src={method.logoUrl || (method.image?.startsWith('http') || method.image?.startsWith('/') ? method.image : getAssetUrl(`images/payment/${method.image}`))}
-                                            alt={method.name}
-                                            className="w-full h-full object-contain p-3"
-                                            fallback={<FiDollarSign size={28} className="text-gray-200" />}
-                                        />
+                                        {method.imageUrl ? (
+                                            <img src={method.imageUrl} alt="" className="w-full h-full object-contain p-2" />
+                                        ) : (
+                                            <FiDollarSign size={28} className="text-primary" />
+                                        )}
                                     </div>
-                                    <span className="font-black text-base text-gray-700 group-hover:text-primary transition-colors">{method.name}</span>
+                                    <span className="font-black text-base text-gray-700 group-hover:text-primary transition-colors text-center px-2">{method.name || method.label}</span>
                                     <div className="absolute top-4 right-4 w-7 h-7 rounded-full border-2 border-gray-100 group-hover:border-primary group-hover:bg-primary transition-all flex items-center justify-center">
                                         <FiChevronRight size={12} className="text-gray-200 group-hover:text-white" />
                                     </div>
@@ -157,30 +154,26 @@ export default function PaymentFlow({
                                 {isRtl ? <FiArrowRight size={16} /> : <FiArrowLeft size={16} />}
                             </button>
                             <div>
-                                <h3 className="text-base font-black text-gray-900">{selectedMethod.name}</h3>
+                                <h3 className="text-base font-black text-gray-900">{selectedMethod.name || selectedMethod.label}</h3>
                                 <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{t('common.payment_step_form')}</p>
                             </div>
                         </div>
 
                         {/* Account Info Card */}
-                        {(selectedMethod.fields?.length > 0 || selectedMethod.instructions) && (
-                            <div className="bg-primary-50 border border-primary-100 rounded-3xl p-5 space-y-3">
-                                <div className="flex items-center gap-2 text-primary text-xs font-black uppercase tracking-widest">
+                        {selectedMethod.details && (
+                            <div className="bg-primary/5 border border-primary/10 rounded-3xl p-5 space-y-4">
+                                <div className="flex items-center gap-2 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
                                     <FiInfo size={14} />
                                     <span>{t('admin.account_details')}</span>
                                 </div>
-                                {selectedMethod.instructions && (
-                                    <p className="text-xs font-bold text-gray-600 leading-relaxed">{selectedMethod.instructions}</p>
-                                )}
-                                {selectedMethod.fields?.map((field, idx) => (
-                                    <div key={idx} className="flex justify-between items-center py-2 border-b border-primary-100 last:border-0 gap-3">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase">{field.label}</span>
-                                            <span className="text-sm font-black text-primary select-all">{field.value}</span>
+                                <div className="space-y-2">
+                                    {selectedMethod.details.split('\n').filter(line => line.trim()).map((line, idx) => (
+                                        <div key={idx} className="flex justify-between items-center p-3 bg-white border border-gray-100 rounded-2xl group/line hover:border-primary/20 transition-all">
+                                            <p className="text-sm font-black text-gray-700 select-all">{line.trim()}</p>
+                                            <CopyButton text={line.trim()} />
                                         </div>
-                                        <CopyButton text={field.value} />
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         )}
 
@@ -257,14 +250,13 @@ export default function PaymentFlow({
                         <div className="bg-white border border-gray-100 rounded-3xl p-5 space-y-4 shadow-sm">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow flex items-center justify-center p-1.5">
-                                    <SafeImage
-                                        src={selectedMethod.logoUrl || (selectedMethod.image?.startsWith('http') || selectedMethod.image?.startsWith('/') ? selectedMethod.image : getAssetUrl(`images/payment/${selectedMethod.image}`))}
-                                        alt=""
-                                        className="w-full h-full object-contain"
-                                        fallback={<FiDollarSign className="text-gray-300" />}
-                                    />
+                                    {selectedMethod.imageUrl ? (
+                                        <img src={selectedMethod.imageUrl} alt="" className="w-full h-full object-contain" />
+                                    ) : (
+                                        <FiDollarSign className="text-primary" />
+                                    )}
                                 </div>
-                                <span className="text-sm font-black text-gray-800">{selectedMethod.name}</span>
+                                <span className="text-sm font-black text-gray-800">{selectedMethod.name || selectedMethod.label}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-100">
                                 {[

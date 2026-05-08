@@ -417,10 +417,21 @@
         "close_gallery": "إغلاق المعرض",
         "select_image_desc": "اختر صورة من المعرض",
         "manage_payment_methods": "إدارة طرق الدفع",
+        "payment_methods_config_desc": "تكوين شاشة الدفع والطرق الظاهرة للزبائن",
+        "enable_payment_screen": "تفعيل شاشة الدفع",
+        "payment_screen_enabled": "شاشة الدفع مفعلة حالياً",
+        "payment_screen_disabled": "سيتم تخطي شاشة الدفع عند إتمام الطلب",
         "payment_methods_title": "إدارة طرق الدفع",
         "add_payment_method": "إضافة طريقة دفع",
         "edit_payment_method": "تعديل طريقة الدفع",
         "method_name": "اسم الطريقة",
+        "method_label": "اسم طريقة الدفع",
+        "method_details": "تفاصيل الدفع",
+        "method_details_placeholder": "أدخل رقم الحساب أو المحفظة أو تعليمات الدفع",
+        "payment_type": "نوع الدفع",
+        "payment_type_bank": "بنك",
+        "payment_type_wallet": "محفظة",
+        "payment_type_cash": "كاش",
         "image_name": "اسم الصورة (مثال: bop.png)",
         "account_details": "تفاصيل الحساب",
         "field_label": "عنوان الحقل (مثال: رقم الحساب)",
@@ -483,7 +494,10 @@
     },
     "footer": {
         "developed_by": "تصميم وتطوير",
-        "rights_reserved": "جميع الحقوق محفوظة"
+        "rights_reserved": "جميع الحقوق محفوظة",
+        "payment_methods": "طرق الدفع",
+        "no_active_payment_methods": "لا توجد طرق دفع مفعلة حالياً",
+        "copied": "تم النسخ ✓"
     },
     "whatsapp": {
         "time": "الوقت",

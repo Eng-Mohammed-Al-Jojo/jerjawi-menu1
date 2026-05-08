@@ -9,15 +9,19 @@ import {
   FaTiktok,
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { CreditCard } from "lucide-react";
 import { ref, onValue } from "firebase/database";
 import { db } from "../../firebase";
 import { useTranslation } from "react-i18next";
+import { usePaymentMethods } from "../../hooks/usePaymentMethods";
+import PaymentModal from "./PaymentModal";
 
 const LOCAL_STORAGE_KEY = "footerInfo";
 
 export default function Footer() {
-
   const { t } = useTranslation();
+  const { methods, loading } = usePaymentMethods();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const [footer, setFooter] = useState({
     address: "",
@@ -29,9 +33,7 @@ export default function Footer() {
     telegram: "",
   });
 
-
   useEffect(() => {
-    /* ===== footerInfo ===== */
     const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (localData) setFooter(JSON.parse(localData));
 
@@ -49,13 +51,10 @@ export default function Footer() {
     };
   }, []);
 
-  /* ===== Social Icons ===== */
   const socialIcons: { Icon: any; url: string | undefined }[] = [
     {
       Icon: FaWhatsapp,
-      url: footer.whatsapp
-        ? `https://wa.me/${footer.whatsapp}`
-        : undefined,
+      url: footer.whatsapp ? `https://wa.me/${footer.whatsapp}` : undefined,
     },
     { Icon: FaInstagram, url: footer.instagram || undefined },
     { Icon: FaFacebookF, url: footer.facebook || undefined },
@@ -63,10 +62,20 @@ export default function Footer() {
     { Icon: FaTelegramPlane, url: footer.telegram || undefined },
   ];
 
+
+
   return (
-    <footer className="w-full bg-(--menu-card-bg)/40 backdrop-blur-md border-t border-(--menu-border) py-12 px-6 mt-20">
+    <footer className="w-full bg-(--menu-card-bg)/40 backdrop-blur-md border-t border-(--menu-border) px-4 py-3 md:px-6 md:py-4 mt-20 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
       <div className="max-w-6xl mx-auto flex flex-col items-center gap-8">
-        {/* Contact info Row */}
+        <button
+          type="button"
+          onClick={() => setIsPaymentModalOpen(true)}
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-(--menu-bg) border border-(--menu-border) text-(--menu-text) font-black text-sm hover:text-primary hover:border-primary transition-all shadow-sm"
+        >
+          <CreditCard size={18} />
+          {t('footer.payment_methods')}
+        </button>
+
         <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-(--menu-text)">
           {footer.address && (
             <div className="flex items-center gap-2">
@@ -82,7 +91,6 @@ export default function Footer() {
           )}
         </div>
 
-        {/* Social Icons */}
         <div className="flex gap-4">
           {socialIcons.map(({ Icon, url }, i) => url && (
             <a key={i} href={url} target="_blank" rel="noopener noreferrer"
@@ -92,9 +100,6 @@ export default function Footer() {
           ))}
         </div>
 
-
-
-        {/* Developer Signature */}
         <div className="pt-8 border-t border-(--menu-border) w-full flex flex-col items-center gap-4">
           <a href="https://engmohammedaljojo.vercel.app/" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
@@ -106,6 +111,13 @@ export default function Footer() {
           <p className="text-[10px] text-(--menu-text-muted) font-bold">© {new Date().getFullYear()} {t('footer.rights_reserved')}</p>
         </div>
       </div>
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        methods={methods}
+        loading={loading}
+      />
     </footer>
   );
 }

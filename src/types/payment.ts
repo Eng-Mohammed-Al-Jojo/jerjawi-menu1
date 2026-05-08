@@ -1,22 +1,23 @@
-export type PaymentMethodStatus = "active" | "inactive";
-
-export interface PaymentMethodField {
-    id: string;
-    label: string;
-    value: string;
-}
-
 export interface PaymentMethod {
     id: string;
-    type: "cash" | "bank";
     name: string;
-    image?: string;
-    logoUrl?: string;
-    instructions?: string;
-    isActive: boolean;
+    imageUrl?: string;
+    fields?: { label: string; value: string }[];
+    showPaymentDetails: boolean;
+    isEnabled: boolean;
+    type: "bank" | "wallet" | "cash";
     order?: number;
-    fields: PaymentMethodField[];
     createdAt?: number;
+    
+    // Deprecated fields kept for compatibility during migration if needed
+    label?: string;
+    details?: string;
+    isActive?: boolean;
+}
+
+export interface PaymentMethodsSettings {
+    enabled: boolean;
+    methods?: Record<string, Omit<PaymentMethod, "id">>;
 }
 
 export type PaymentStatus = "pending" | "approved" | "rejected";

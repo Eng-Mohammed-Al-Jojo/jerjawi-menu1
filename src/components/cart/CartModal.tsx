@@ -14,6 +14,7 @@ import { toast } from "react-hot-toast";
 import type { PaymentMethod, PaymentRecord } from "../../types/payment";
 import PaymentFlow from "./PaymentFlow";
 import { FiDollarSign } from "react-icons/fi";
+import { usePaymentMethods } from "../../hooks/usePaymentMethods";
 
 interface OrderSettings {
     inRestaurant: boolean;
@@ -32,7 +33,8 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
     const [orderSettings, setOrderSettings] = useState<OrderSettings | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
-    const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+    const { methods: allPaymentMethods, enabled: paymentScreenEnabled, loading: paymentMethodsLoading } = usePaymentMethods();
+    const paymentMethods = allPaymentMethods.filter((method) => method.isEnabled);
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
     const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
     const [createdOrderDisplayId, setCreatedOrderDisplayId] = useState<string | null>(null);
@@ -50,10 +52,7 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     : data.orderSettings || null
             );
         });
-        const unsubMethods = PaymentService.listenToPaymentMethods((methods) => {
-            setPaymentMethods(methods.filter(m => m.isActive));
-        });
-        return () => { unsubSettings(); unsubMethods(); };
+        return () => { unsubSettings(); };
     }, []);
 
     useEffect(() => {
@@ -72,6 +71,20 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
             }
         });
     }, [paymentRecord?.id]);
+
+    useEffect(() => {
+        if (paymentMethodsLoading || step !== "payment" || paymentRecord) return;
+        if (!createdOrderId) return;
+        if (paymentScreenEnabled && paymentMethods.length > 0) return;
+
+        toast.success(t('common.order_saved_success'));
+        saveOrderSession(null);
+        updateOrderId(createdOrderId);
+        setIsFullTrackingOpen(true);
+        clearCart();
+        setStep("items");
+        setSelectedMethod(null);
+    }, [paymentMethodsLoading, paymentScreenEnabled, paymentMethods.length, step, paymentRecord, createdOrderId]);
 
     // ✅ Session Sync Effect
     useEffect(() => {
@@ -160,6 +173,11 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
             return;
         }
 
+        if (paymentMethodsLoading) {
+            toast(t('common.loading'));
+            return;
+        }
+
         setSubmitting(true);
         try {
             const isWaMode = orderSettings?.orderMode === "whatsapp";
@@ -210,10 +228,11 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
                 lastUpdated: Date.now()
             });
 
-            if (paymentMethods.length > 0) {
+            if (paymentScreenEnabled && paymentMethods.length > 0) {
                 setStep("payment");
             } else {
                 toast.success(t('common.order_saved_success'));
+                saveOrderSession(null);
                 updateOrderId(cleanId);
                 setIsFullTrackingOpen(true);
                 setTimeout(() => { clearCart(); setStep("items"); }, 1000);
@@ -238,18 +257,15 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
         setSubmitting(true);
         try {
             // Map receiver details from method fields if they exist
-            const receiverName = method.fields?.[0]?.value || null;
-            const receiverNumber = method.fields?.[1]?.value || null;
-
             const record = await PaymentService.submitPayment({
                 orderId: createdOrderId,
                 methodId: method.id,
-                methodName: method.name,
+                methodName: method.label,
                 customerName: customerName,
                 senderAccountName: formData.senderAccountName || null,
                 senderAccountNumber: formData.senderAccountNumber || null,
-                receiverAccountName: receiverName,
-                receiverAccountNumber: receiverNumber,
+                receiverAccountName: method.label,
+                receiverAccountNumber: method.details || null,
                 senderBankOrWallet: formData.senderBankOrWallet || (formData as any).transactionReference || null,
                 notes: formData.notes || "",
                 amount: Number(totalPrice),
@@ -259,7 +275,7 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
             // Update Session Status
             if (orderSession) {
-                saveOrderSession({ ...orderSession, status: "submitted", paymentMethod: method.name, lastUpdated: Date.now() });
+                saveOrderSession({ ...orderSession, status: "submitted", paymentMethod: method.label, lastUpdated: Date.now() });
             }
 
             if (method.type === 'cash') {

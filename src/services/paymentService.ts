@@ -1,7 +1,49 @@
 import { FirebaseService } from "./firebaseService";
-import type { PaymentMethod, PaymentRecord, PaymentStatus } from "../types/payment";
+import type { PaymentMethod, PaymentMethodsSettings, PaymentRecord, PaymentStatus } from "../types/payment";
 import { OrderService } from "./orderService";
 import type { Order } from "../types/order";
+
+const PAYMENT_SETTINGS_PATH = "settings/paymentMethods";
+
+interface NormalizedPaymentSettings {
+    enabled: boolean;
+    methods: PaymentMethod[];
+}
+
+const normalizeMethod = (id: string, value: unknown): PaymentMethod => {
+    const data = (value || {}) as any;
+
+    return {
+        id,
+        name: data.name || data.label || "",
+        imageUrl: data.imageUrl || "",
+        fields: data.fields || [],
+        showPaymentDetails: data.showPaymentDetails !== undefined ? !!data.showPaymentDetails : true,
+        isEnabled: data.isEnabled !== undefined ? !!data.isEnabled : (data.isActive !== undefined ? !!data.isActive : true),
+        type: data.type === "wallet" || data.type === "cash" || data.type === "bank" ? data.type : "bank",
+        order: data.order,
+        createdAt: data.createdAt,
+        
+        // Backward compatibility
+        label: data.name || data.label || "",
+        details: data.details || data.instructions || data.fields?.map((f: any) => f.value).filter(Boolean).join("\n") || "",
+        isActive: data.isEnabled !== undefined ? !!data.isEnabled : (data.isActive !== undefined ? !!data.isActive : true),
+    };
+};
+
+const normalizeSettings = (data: unknown): NormalizedPaymentSettings => {
+    const settings = (data || {}) as PaymentMethodsSettings;
+    const rawMethods = settings.methods || {};
+
+    const methods = Object.entries(rawMethods)
+        .map(([id, value]) => normalizeMethod(id, value))
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    return {
+        enabled: settings.enabled !== undefined ? !!settings.enabled : true,
+        methods
+    };
+};
 
 /**
  * Payment Service
@@ -13,23 +55,21 @@ export const PaymentService = {
      */
     async getPaymentMethods(): Promise<PaymentMethod[]> {
         return new Promise((resolve) => {
-            FirebaseService.listen("paymentMethods", (data) => {
-                const methods = Object.entries(data || {}).map(([id, val]) => ({
-                    id,
-                    ...(val as any)
-                }));
-                resolve(methods);
+            FirebaseService.listen(PAYMENT_SETTINGS_PATH, (data) => {
+                resolve(normalizeSettings(data).methods);
             });
         });
     },
 
     listenToPaymentMethods(callback: (methods: PaymentMethod[]) => void) {
-        return FirebaseService.listen("paymentMethods", (data) => {
-            const methods = Object.entries(data || {}).map(([id, val]) => ({
-                id,
-                ...(val as any)
-            }));
-            callback(methods);
+        return FirebaseService.listen(PAYMENT_SETTINGS_PATH, (data) => {
+            callback(normalizeSettings(data).methods);
+        });
+    },
+
+    listenToPaymentMethodsSettings(callback: (settings: NormalizedPaymentSettings) => void) {
+        return FirebaseService.listen(PAYMENT_SETTINGS_PATH, (data) => {
+            callback(normalizeSettings(data));
         });
     },
 
@@ -38,14 +78,29 @@ export const PaymentService = {
         const data = {
             ...method,
             id,
+            name: method.name || method.label || "",
+            type: method.type || "bank",
             createdAt: method.createdAt || Date.now(),
-            isActive: method.isActive !== undefined ? method.isActive : true
+            isEnabled: method.isEnabled !== undefined ? method.isEnabled : (method.isActive !== undefined ? method.isActive : true),
+            showPaymentDetails: method.showPaymentDetails !== undefined ? method.showPaymentDetails : true,
+            order: method.order || 0
         };
-        return FirebaseService.update(`paymentMethods/${id}`, data);
+        // Ensure we don't save undefined fields
+        Object.keys(data).forEach(key => (data as any)[key] === undefined && delete (data as any)[key]);
+        
+        return FirebaseService.update(`${PAYMENT_SETTINGS_PATH}/methods/${id}`, data);
+    },
+
+    async updatePaymentMethodField(id: string, field: string, value: any) {
+        return FirebaseService.update(`${PAYMENT_SETTINGS_PATH}/methods/${id}`, { [field]: value });
+    },
+
+    async setPaymentScreenEnabled(enabled: boolean) {
+        return FirebaseService.update(PAYMENT_SETTINGS_PATH, { enabled });
     },
 
     async deletePaymentMethod(id: string) {
-        return FirebaseService.remove(`paymentMethods/${id}`);
+        return FirebaseService.remove(`${PAYMENT_SETTINGS_PATH}/methods/${id}`);
     },
 
     /**
