@@ -68,10 +68,10 @@ export default function PaymentMethodsDisplay() {
                         </div>
 
                         <div className="flex items-center justify-between px-4 py-3 gap-3 group hover:bg-(--bg-main)/30 transition-colors">
-                            <span className="text-xs font-black text-(--text-main) whitespace-pre-wrap break-words">{method.details}</span>
+                            <span className="text-xs font-black text-(--text-main) whitespace-pre-wrap wrap-break-word">{method.details}</span>
                             <button
                                 type="button"
-                                onClick={() => handleCopy(method.id, method.details)}
+                                onClick={() => handleCopy(method.id, method.details || "")}
                                 disabled={!method.details}
                                 className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${copied ? "bg-green-500 text-white" : "bg-(--bg-main) text-(--text-muted) hover:bg-primary hover:text-white"}`}
                                 aria-label={t('common.copy')}

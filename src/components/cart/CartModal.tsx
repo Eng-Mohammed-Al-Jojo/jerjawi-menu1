@@ -108,7 +108,7 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
             if (data.paymentStatus === "paid" && step === "payment") {
                 toast.success(t('common.payment_approved'));
                 if (orderSession) saveOrderSession({ ...orderSession, status: "paid", lastUpdated: Date.now() });
-                
+
                 setTimeout(() => {
                     saveOrderSession(null);
                     updateOrderId(orderSession.orderId);
@@ -260,11 +260,11 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
             const record = await PaymentService.submitPayment({
                 orderId: createdOrderId,
                 methodId: method.id,
-                methodName: method.label,
+                methodName: method.label || method.name,
                 customerName: customerName,
                 senderAccountName: formData.senderAccountName || null,
                 senderAccountNumber: formData.senderAccountNumber || null,
-                receiverAccountName: method.label,
+                receiverAccountName: method.label || method.name,
                 receiverAccountNumber: method.details || null,
                 senderBankOrWallet: formData.senderBankOrWallet || (formData as any).transactionReference || null,
                 notes: formData.notes || "",

@@ -154,6 +154,7 @@ export default function MenuPage() {
         onDetailsClick={setSelectedDetailsItem}
       />
 
+
       <ItemModal
         isOpen={!!selectedItem}
         onClose={() => setSelectedItem(null)}
