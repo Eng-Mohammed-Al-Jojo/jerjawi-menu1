@@ -246,17 +246,6 @@ export default function TrackOrderPage() {
                                     </div>
                                 </div>
                             )}
-                            {order.customer?.address && (
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-orange-500/5 flex items-center justify-center text-orange-500">
-                                        <FiTruck size={18} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-[10px] text-(--text-muted) font-black uppercase tracking-widest">{t('common.address')}</span>
-                                        <span className="font-bold text-(--text-main)">{order.customer.address}</span>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </motion.div>
 
@@ -307,6 +296,3 @@ function FiBell({ size }: { size: number }) {
     return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height={size} width={size} xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>;
 }
 
-function FiTruck({ size }: { size: number }) {
-    return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height={size} width={size} xmlns="http://www.w3.org/2000/svg"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>;
-}

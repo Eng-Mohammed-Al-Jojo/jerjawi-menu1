@@ -49,7 +49,6 @@ export interface Item {
   ingredients?: string;
   ingredientsAr?: string;
   ingredientsEn?: string;
-  priceTw?: number;
   dineInOrderEnabled?: boolean;
   takeawayOrderEnabled?: boolean;
   categoryId: string;

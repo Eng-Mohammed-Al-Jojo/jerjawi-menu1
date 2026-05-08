@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { useEffect, useState, useMemo, type ReactNode } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import {
     FiSearch, FiFilter, FiCalendar, FiPackage, FiCheckCircle,
-    FiClock, FiTrash2, FiArchive, FiDollarSign, FiBarChart2, FiLayers,
-    FiShoppingBag, FiInfo, FiTag, FiArrowRight, FiRotateCw, FiX, FiBell,
-    FiTruck, FiBellOff, FiVolume2, FiVolumeX,
+    FiClock, FiTrash2, FiArchive, FiDollarSign, FiBarChart2,
+    FiShoppingBag, FiInfo, FiTag, FiArrowRight, FiRotateCw, FiX, FiBell
+    , FiBellOff, FiVolume2, FiVolumeX,
+    FiCheck,
 } from "react-icons/fi";
-import { FaChair, FaMotorcycle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -49,7 +48,7 @@ export default function AdminOrdersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState<string>("all");
     const [paymentFilter, setPaymentFilter] = useState<string>("all");
-    const [typeFilter, setTypeFilter] = useState<string>("all");
+    const [typeFilter] = useState<string>("all");
     const [sourceFilter, setSourceFilter] = useState<string>("all");
     const [dateRange, setDateRange] = useState<DateRangeFilter>("all");
 
@@ -133,7 +132,6 @@ export default function AdminOrdersPage() {
             else if (viewMode === "whatsapp") matchesView = order.source === "whatsapp";
 
             const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-            const matchesType = typeFilter === "all" || order.orderType === typeFilter;
 
             const isPaid = order.paymentStatus === "paid" || order.status === "delivered";
             const matchesPayment = paymentFilter === "all" || (paymentFilter === "paid" ? isPaid : !isPaid);
@@ -147,7 +145,7 @@ export default function AdminOrdersPage() {
 
             const matchesSource = sourceFilter === "all" || (order.source || "dashboard") === sourceFilter;
 
-            return matchesSearch && matchesView && matchesStatus && matchesType && matchesPayment && matchesDate && matchesSource;
+            return matchesSearch && matchesView && matchesStatus && matchesPayment && matchesDate && matchesSource;
         });
     }, [orders, searchTerm, statusFilter, paymentFilter, typeFilter, dateRange, viewMode, sourceFilter]);
 
@@ -323,11 +321,6 @@ export default function AdminOrdersPage() {
                             ]}
                             isRtl={isRtl}
                         />
-                        <FilterSelect icon={<FiLayers />} value={typeFilter} onChange={setTypeFilter} options={[
-                            { val: "all", label: t('admin.all_types') },
-                            { val: "in", label: t('common.dine_in') },
-                            { val: "out", label: t('common.takeaway') }
-                        ]} isRtl={isRtl} />
                         <FilterSelect icon={<FiPackage />} value={statusFilter} onChange={setStatusFilter} options={[
                             { val: "all", label: t('admin.all_status') },
                             { val: "pending", label: t('admin.pending') },
@@ -360,7 +353,6 @@ export default function AdminOrdersPage() {
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.order_id')}</th>
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.customer')}</th>
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.order_time')}</th>
-                                        <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.type')}</th>
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.status_lifecycle')}</th>
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em]">{t('admin.payment')}</th>
                                         <th className="px-8 py-6 text-[11px] font-bold uppercase text-gray-400 tracking-[0.2em] text-center">{t('common.total')}</th>
@@ -437,26 +429,6 @@ export default function AdminOrdersPage() {
                                                                     ? new Date(order.createdAt).toLocaleDateString('ar-EG')
                                                                     : ""}
                                                             </span>
-                                                        </div>
-                                                    </td>
-                                                    {/* TYPE */}
-                                                    <td className="px-8 py-6">
-                                                        <div className="flex items-center justify-center">
-                                                            {order.orderType === "in" ? (
-                                                                <div
-                                                                    title={t('common.dine_in')}
-                                                                    className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm border border-blue-100 hover:scale-110 transition-transform"
-                                                                >
-                                                                    <FaChair size={18} />
-                                                                </div>
-                                                            ) : (
-                                                                <div
-                                                                    title={t('common.takeaway')}
-                                                                    className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-sm border border-emerald-100 hover:scale-110 transition-transform"
-                                                                >
-                                                                    <FaMotorcycle size={18} />
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     </td>
 
@@ -757,7 +729,7 @@ function InlineStatusPills({ order, t, viewMode }: { order: Order, t: any, viewM
         pending: { color: "blue", icon: <FiCheckCircle />, label: t('admin.mark_confirmed'), btnClass: "bg-blue-500 hover:bg-blue-600 shadow-blue-500/20" },
         confirmed: { color: "indigo", icon: <FiPackage />, label: t('admin.mark_preparing'), btnClass: "bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/20" },
         preparing: { color: "purple", icon: <FiBell />, label: t('admin.mark_ready'), btnClass: "bg-purple-500 hover:bg-purple-600 shadow-purple-500/20" },
-        ready: { color: "emerald", icon: <FiTruck />, label: t('admin.mark_delivered'), btnClass: "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" },
+        ready: { color: "emerald", icon: <FiCheck />, label: t('admin.mark_delivered'), btnClass: "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" },
         delivered: { color: "gray", icon: <FiArchive />, label: t('admin.mark_archived'), btnClass: "bg-gray-500 hover:bg-gray-600 shadow-gray-500/20" },
         cancelled: { color: "red", icon: <FiX />, label: t('admin.cancelled'), btnClass: "bg-red-500 hover:bg-red-600 shadow-red-500/20" },
         archived: { color: "blue", icon: <FiRotateCw />, label: t('admin.restore_order'), btnClass: "bg-primary hover:bg-primary/90 shadow-primary/20" }

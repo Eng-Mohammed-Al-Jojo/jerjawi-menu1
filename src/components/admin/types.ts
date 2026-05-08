@@ -44,7 +44,6 @@ export interface Item {
   image?: string;
   nameAr: string;
   price: string;
-  priceTw?: string;
   ingredientsAr?: string;
   categoryId: string;
   subcategoryId?: string;

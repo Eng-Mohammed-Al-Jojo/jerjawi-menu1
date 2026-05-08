@@ -6,7 +6,7 @@ import { useCart } from "../../context/CartContext";
 import { useMenuStore } from "../../store/useMenuStore";
 import type { Item } from "./Menu";
 import { toast } from "react-hot-toast";
-import { getItemOrderPermissions, getMenuPricesForType, type PriceType } from "../../utils/priceUtils";
+import { getMenuPricesForType, type PriceType } from "../../utils/priceUtils";
 
 interface Props {
   item: Item | null;
@@ -18,7 +18,7 @@ interface Props {
 export default function ItemModal({ item, isOpen, onClose, orderSystem = true }: Props) {
   const { t } = useTranslation();
   const { addItem } = useCart();
-  const { selectedOrderMode, orderModesConfig } = useMenuStore();
+  const { selectedOrderMode } = useMenuStore();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
@@ -42,12 +42,12 @@ export default function ItemModal({ item, isOpen, onClose, orderSystem = true }:
 
   const priceOptions = getMenuPricesForType(item, selectedOrderMode);
   const hasMultiplePrices = priceOptions.length > 1;
-  const itemOrderPermissions = getItemOrderPermissions(item, orderModesConfig);
+  const itemOrderPermissions = { dineIn: item.dineInOrderEnabled ?? true };
   const selectedPriceOption = priceOptions[selectedPriceIndex] || priceOptions[0];
   const displayedPrices = priceOptions.map((option) => option.price).join(", ");
 
   const itemName = item.nameAr || item.name || "";
-  const isCurrentTabOrderingEnabled = orderSystem && itemOrderPermissions[selectedOrderMode];
+  const isCurrentTabOrderingEnabled = orderSystem && itemOrderPermissions.dineIn;
 
   const commitAdd = (price: number, priceType: PriceType) => {
     if (!isCurrentTabOrderingEnabled) return;
@@ -115,11 +115,7 @@ export default function ItemModal({ item, isOpen, onClose, orderSystem = true }:
 
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <div className="flex items-center gap-1 rounded-full bg-(--menu-surface) border border-(--menu-border) px-3 py-1">
-                      <span className="text-[10px] font-black text-(--menu-text-muted)">{selectedOrderMode === "takeaway" ? "TW" : "DIN"}</span>
-                      <span className="text-lg font-black text-(--menu-primary-800)">{displayedPrices || "—"}</span>
-                      <small className="text-xs opacity-70">₪</small>
-                    </div>
+                    <span className="text-lg font-black text-(--menu-primary-800)">{displayedPrices || "—"}</span>
                   </div>
                 </div>
 

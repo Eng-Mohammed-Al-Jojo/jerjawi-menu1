@@ -227,7 +227,6 @@ const ItemSection: React.FC<Props> = ({ categories, subcategories, items, setPop
   const [itemNameAr, setItemNameAr] = useState("");
   const [itemIngredientsAr, setItemIngredientsAr] = useState("");
   const [itemPrice, setItemPrice] = useState("");
-  const [itemPriceTw, setItemPriceTw] = useState("");
   const [quickSearch, setQuickSearch] = useState("");
 
   const [selectedCategoryError, setSelectedCategoryError] = useState(false);
@@ -266,7 +265,6 @@ const ItemSection: React.FC<Props> = ({ categories, subcategories, items, setPop
       nameAr: itemNameAr,
       ingredientsAr: normalizeIngredients(itemIngredientsAr),
       price: itemPrice,
-      priceTw: itemPriceTw.trim() !== "" ? itemPriceTw : null,
       categoryId: selectedCategory,
       subcategoryId: selectedSubcategory || null,
       visible: true,
@@ -278,7 +276,6 @@ const ItemSection: React.FC<Props> = ({ categories, subcategories, items, setPop
     setItemNameAr("");
     setItemIngredientsAr("");
     setItemPrice("");
-    setItemPriceTw("");
     setSelectedCategory("");
     setSelectedSubcategory("");
     setItemImage("");
@@ -447,9 +444,9 @@ const ItemSection: React.FC<Props> = ({ categories, subcategories, items, setPop
           </div>
 
           <div className="flex flex-col gap-3 md:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               <div className="flex flex-col gap-2">
-                <label className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] text-gray-400 px-1">{t('common.dine_in') || "Dine-In Price"}</label>
+                <label className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] text-gray-400 px-1">{t('common.price') || "السعر"}</label>
                 <input
                   className={`w-full h-14 bg-gray-50 border px-6 rounded-2xl text-sm md:text-base lg:text-md outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all
                     ${itemPriceError ? "border-secondary" : "border-gray-100"}`}
@@ -457,18 +454,6 @@ const ItemSection: React.FC<Props> = ({ categories, subcategories, items, setPop
                   value={itemPrice}
                   onChange={(e) => { setItemPrice(e.target.value); setItemPriceError(false); }}
                 />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] text-gray-400 px-1">{t('common.takeaway') || "Takeaway Price"}</label>
-                <input
-                  className="w-full h-14 bg-gray-50 border px-6 rounded-2xl text-sm md:text-base lg:text-md outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all border-gray-100"
-                  placeholder={t('admin.item_price_placeholder')}
-                  value={itemPriceTw}
-                  onChange={(e) => setItemPriceTw(e.target.value)}
-                />
-                <span className="text-xs text-gray-400 px-2 mt-1">
-                  إذا لم يتم إدخال سعر التيك اواي سيتم استخدام سعر الصالة
-                </span>
               </div>
             </div>
           </div>

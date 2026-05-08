@@ -13,12 +13,9 @@ interface CartButtonProps {
 export default function CartButton({ className = "" }: CartButtonProps) {
     const { t, i18n } = useTranslation();
     const { totalItems, isFullTrackingOpen, setIsFullTrackingOpen } = useCart();
-    const { selectedOrderMode, orderModesConfig } = useMenuStore();
+    const { orderModesConfig } = useMenuStore();
 
-    const isCurrentTabOrderingEnabled =
-        selectedOrderMode === "takeaway"
-            ? orderModesConfig.takeawayEnabled
-            : orderModesConfig.dineInEnabled;
+    const isCurrentTabOrderingEnabled = orderModesConfig.dineInEnabled;
 
     const [open, setOpen] = useState(false);
 

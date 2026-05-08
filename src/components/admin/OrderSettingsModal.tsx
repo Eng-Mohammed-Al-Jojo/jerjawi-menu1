@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { ref, update } from "firebase/database";
 import { db } from "../../firebase";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiX, FiCheck, FiSettings, FiInfo, FiSmartphone, FiLayout, FiTruck, FiCoffee } from "react-icons/fi";
-import { FaWhatsapp, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
+import { FiX, FiCheck, FiSettings, FiInfo, FiLayout, FiSmartphone } from "react-icons/fi";
+import { FaWhatsapp, FaMotorcycle, FaUtensils, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 /* ================= Toast ================= */
@@ -112,8 +112,6 @@ export default function OrderSettingsModal({ setShowOrderSettings, orderSettings
     const { t, i18n } = useTranslation();
     const isRtl = i18n.language === 'ar';
     const [orderSystem, setOrderSystem] = useState(true);
-    const [inRestaurant, setInRestaurant] = useState(false);
-    const [takeaway, setTakeaway] = useState(false);
     const [orderMode, setOrderMode] = useState<"dashboard" | "whatsapp">("dashboard");
     const [inPhone, setInPhone] = useState("");
     const [outPhone, setOutPhone] = useState("");
@@ -130,18 +128,16 @@ export default function OrderSettingsModal({ setShowOrderSettings, orderSettings
         if (!initialSettings) return;
         setOrderSystem(initialSettings.orderSystem ?? true);
         const s = initialSettings.orderSettings ?? {};
-        setInRestaurant(!!s.inRestaurant);
-        setTakeaway(!!s.takeaway);
         setOrderMode(initialSettings.orderMode || "dashboard");
         setInPhone(s.inPhone || "");
         setOutPhone(s.outPhone || "");
         setComplaintsWhatsapp(initialSettings.complaintsWhatsapp || "");
         setFooter(initialSettings.footerInfo || {});
-        
+
         const modes = initialSettings.orderModes || { dineInEnabled: true, takeawayEnabled: true };
         setDineInEnabled(!!modes.dineInEnabled);
         setTakeawayEnabled(!!modes.takeawayEnabled);
-        
+
         setLoading(false);
     }, [initialSettings]);
 
@@ -149,14 +145,14 @@ export default function OrderSettingsModal({ setShowOrderSettings, orderSettings
 
     const handleSave = async () => {
         if (orderMode === "whatsapp") {
-            const enabledAnyService = inRestaurant || takeaway;
+            const enabledAnyService = dineInEnabled || takeawayEnabled;
             if (!enabledAnyService) {
                 setToast({ type: "error", message: t('admin.no_service_enabled') || "يجب تفعيل خدمة واحدة على الأقل" });
                 setTimeout(() => setToast(null), 3000);
                 return;
             }
 
-            if ((inRestaurant && inPhone.trim() === "") || (takeaway && outPhone.trim() === "")) {
+            if ((dineInEnabled && inPhone.trim() === "") || (takeawayEnabled && outPhone.trim() === "")) {
                 setToast({ type: "error", message: t('admin.whatsapp_required') });
                 setTimeout(() => setToast(null), 3000);
                 return;
@@ -167,8 +163,8 @@ export default function OrderSettingsModal({ setShowOrderSettings, orderSettings
             orderSystem,
             orderMode,
             orderSettings: {
-                inRestaurant,
-                takeaway,
+                inRestaurant: dineInEnabled,
+                takeaway: takeawayEnabled,
                 inPhone,
                 outPhone
             },
@@ -242,114 +238,84 @@ export default function OrderSettingsModal({ setShowOrderSettings, orderSettings
                         </button>
                     </div>
 
-                    {/* ✅ Dual Pricing / Order Modes Config */}
-                    <div className="space-y-6">
-                        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 px-2">{t('admin.dual_pricing_modes') || "أوضاع الطلب والأسعار"}</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div className={`p-6 rounded-3xl border transition-all ${dineInEnabled ? "bg-white border-primary/20 shadow-sm" : "bg-gray-50 border-gray-100 opacity-60"}`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${dineInEnabled ? "bg-primary/10 text-primary" : "bg-gray-200 text-gray-400"}`}>
-                                            <FiCoffee />
-                                        </div>
-                                        <span className="font-bold text-sm text-gray-900">{t('admin.dine_in_mode') || "وضع داخل المطعم"}</span>
-                                    </div>
-                                    <button
-                                        onClick={() => setDineInEnabled(!dineInEnabled)}
-                                        className={`relative w-12 h-6 rounded-full transition-all border ${dineInEnabled ? "bg-emerald-500 border-emerald-600" : "bg-gray-200 border-gray-300"}`}
-                                    >
-                                        <motion.span animate={{ x: dineInEnabled ? (isRtl ? 4 : 28) : (isRtl ? 28 : 4) }} className="absolute top-0.5 left-0 w-4.5 h-4.5 rounded-full bg-white shadow-sm" />
-                                    </button>
-                                </div>
-                                <p className="text-[10px] text-gray-400 font-medium leading-relaxed">
-                                    {t('admin.dine_in_mode_desc') || "تفعيل هذا الوضع يظهر أسعار الصالة ويسمح بالطلب المباشر."}
-                                </p>
-                            </div>
-
-                            <div className={`p-6 rounded-3xl border transition-all ${takeawayEnabled ? "bg-white border-primary/20 shadow-sm" : "bg-gray-50 border-gray-100 opacity-60"}`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${takeawayEnabled ? "bg-primary/10 text-primary" : "bg-gray-200 text-gray-400"}`}>
-                                            <FiTruck />
-                                        </div>
-                                        <span className="font-bold text-sm text-gray-900">{t('admin.takeaway_mode') || "وضع التيك أوي"}</span>
-                                    </div>
-                                    <button
-                                        onClick={() => setTakeawayEnabled(!takeawayEnabled)}
-                                        className={`relative w-12 h-6 rounded-full transition-all border ${takeawayEnabled ? "bg-emerald-500 border-emerald-600" : "bg-gray-200 border-gray-300"}`}
-                                    >
-                                        <motion.span animate={{ x: takeawayEnabled ? (isRtl ? 4 : 28) : (isRtl ? 28 : 4) }} className="absolute top-0.5 left-0 w-4.5 h-4.5 rounded-full bg-white shadow-sm" />
-                                    </button>
-                                </div>
-                                <p className="text-[10px] text-gray-400 font-medium leading-relaxed">
-                                    {t('admin.takeaway_mode_desc') || "تفعيل هذا الوضع يظهر أسعار السفري ويسمح بالطلب الخارجي."}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Order Mode Switch */}
+                    {/* Order Source Mode Switcher */}
                     <div className="space-y-4">
-                        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 px-2">{t('admin.order_source_mode') || "وضع استقبال الطلبات"}</h3>
-                        <div className="relative grid grid-cols-2 p-2 bg-gray-100 rounded-3xl overflow-hidden border border-gray-100">
-                            <motion.div
-                                className="absolute top-2 bottom-2 w-[calc(50%-8px)] bg-white rounded-2xl shadow-premium"
-                                animate={{
-                                    left: orderMode === "dashboard"
-                                        ? (isRtl ? "calc(50% + 4px)" : "8px")
-                                        : (isRtl ? "8px" : "calc(50% + 4px)")
-                                }}
-                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                            />
+                        <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 px-2">{t('admin.order_source_mode') || "طريقة استقبال الطلبات"}</h3>
+                        <div className="grid grid-cols-2 gap-4 p-2 bg-gray-50 rounded-4xl border border-gray-100 shadow-inner">
                             <button
                                 onClick={() => setOrderMode("dashboard")}
-                                className={`relative z-10 py-4 text-xs font-black tracking-widest transition-all duration-300
-                                ${orderMode === "dashboard" ? "text-primary" : "text-gray-400 hover:text-gray-600"}`}
+                                className={`flex items-center gap-4 p-6 rounded-4xl transition-all duration-500 ${orderMode === "dashboard"
+                                    ? "bg-white text-primary shadow-premium border border-primary/10"
+                                    : "text-gray-400 hover:text-gray-600"
+                                    }`}
                             >
-                                {t('admin.mode_dashboard')}
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${orderMode === "dashboard" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-gray-100"}`}>
+                                    <FiLayout />
+                                </div>
+                                <div className="text-right">
+                                    <span className="font-black text-sm block">{t('admin.mode_dashboard')}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">نظام لوحة التحكم</span>
+                                </div>
                             </button>
+
                             <button
                                 onClick={() => setOrderMode("whatsapp")}
-                                className={`relative z-10 py-4 text-xs font-black tracking-widest transition-all duration-300
-                                ${orderMode === "whatsapp" ? "text-primary" : "text-gray-400 hover:text-gray-600"}`}
+                                className={`flex items-center gap-4 p-6 rounded-4xl transition-all duration-500 ${orderMode === "whatsapp"
+                                    ? "bg-white text-emerald-600 shadow-premium border border-emerald-500/10"
+                                    : "text-gray-400 hover:text-gray-600"
+                                    }`}
                             >
-                                {t('admin.mode_whatsapp')}
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${orderMode === "whatsapp" ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20" : "bg-gray-100"}`}>
+                                    <FaWhatsapp />
+                                </div>
+                                <div className="text-right">
+                                    <span className="font-black text-sm block">{t('admin.mode_whatsapp')}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">نظام الواتساب المباشر</span>
+                                </div>
                             </button>
                         </div>
+                        <AnimatePresence>
+                            {orderMode === "whatsapp" && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex items-center gap-3 text-amber-700 shadow-sm mx-2"
+                                >
+                                    <FiInfo className="shrink-0" />
+                                    <p className="text-[10px] font-bold leading-relaxed">{t('admin.mode_warning')}</p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={orderMode}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-                        >
+                    {/* Order Modes (Services) Control */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">{t('admin.order_modes') || "الخدمات المتاحة"}</h3>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <ServiceCheckbox
-                                title={t('admin.local_ordering')}
-                                icon={FiCoffee}
-                                enabled={inRestaurant}
-                                onToggle={() => setInRestaurant((p) => !p)}
+                                title={t('admin.dine_in_mode') || "داخل الصالة"}
+                                enabled={dineInEnabled}
+                                onToggle={() => setDineInEnabled(!dineInEnabled)}
+                                icon={FaUtensils}
+                                isWaMode={orderMode === "whatsapp"}
                                 value={inPhone}
                                 setValue={setInPhone}
-                                disabled={!orderSystem}
                                 required={orderMode === "whatsapp"}
-                                isWaMode={orderMode === "whatsapp"}
                             />
                             <ServiceCheckbox
-                                title={t('admin.takeaway_delivery')}
-                                icon={FiTruck}
-                                enabled={takeaway}
-                                onToggle={() => setTakeaway((p) => !p)}
+                                title={t('admin.takeaway_mode') || "طلب خارجي / سفري"}
+                                enabled={takeawayEnabled}
+                                onToggle={() => setTakeawayEnabled(!takeawayEnabled)}
+                                icon={FaMotorcycle}
+                                isWaMode={orderMode === "whatsapp"}
                                 value={outPhone}
                                 setValue={setOutPhone}
-                                disabled={!orderSystem}
                                 required={orderMode === "whatsapp"}
-                                isWaMode={orderMode === "whatsapp"}
                             />
-                        </motion.div>
-                    </AnimatePresence>
+                        </div>
+                    </div>
 
                     {/* Complaints */}
                     <div className="p-8 rounded-4xl bg-secondary/5 border border-secondary/10 space-y-6 relative group overflow-hidden">

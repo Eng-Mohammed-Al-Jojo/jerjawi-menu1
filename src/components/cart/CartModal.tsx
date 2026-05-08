@@ -446,7 +446,6 @@ export default function CartModal({ isOpen, onClose }: { isOpen: boolean; onClos
                                     </button>
                                     <OrderTabs
                                         onConfirm={handleConfirm}
-                                        orderSettings={orderSettings || undefined}
                                         submitting={submitting}
                                     />
                                 </motion.div>

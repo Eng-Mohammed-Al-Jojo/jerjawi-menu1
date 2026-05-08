@@ -14,6 +14,7 @@ interface MenuState {
   setOrderMode: (mode: OrderMode) => void;
   setOrderModesConfig: (config: OrderModesConfig) => void;
   getEffectiveOrderMode: () => OrderMode;
+  isOrderingEnabled: () => boolean;
 }
 
 export const useMenuStore = create<MenuState>()(
@@ -27,7 +28,16 @@ export const useMenuStore = create<MenuState>()(
       setOrderMode: (mode) => set({ selectedOrderMode: mode }),
       setOrderModesConfig: (config) => set({ orderModesConfig: config }),
       getEffectiveOrderMode: () => {
-        return get().selectedOrderMode;
+        const { dineInEnabled, takeawayEnabled } = get().orderModesConfig;
+        const selected = get().selectedOrderMode;
+
+        if (selected === 'dineIn' && !dineInEnabled && takeawayEnabled) return 'takeaway';
+        if (selected === 'takeaway' && !takeawayEnabled && dineInEnabled) return 'dineIn';
+        return selected;
+      },
+      isOrderingEnabled: () => {
+        const { dineInEnabled, takeawayEnabled } = get().orderModesConfig;
+        return dineInEnabled || takeawayEnabled;
       }
     }),
     {

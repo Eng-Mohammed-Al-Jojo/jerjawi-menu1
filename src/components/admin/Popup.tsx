@@ -21,7 +21,6 @@ interface Props {
   editItemValues?: {
     itemNameAr: string;
     itemPrice: string;
-    priceTw: string;
     selectedCategory: string;
     selectedSubcategory: string;
     itemIngredientsAr?: string;
@@ -29,7 +28,6 @@ interface Props {
   setEditItemValues?: (values: {
     itemNameAr: string;
     itemPrice: string;
-    priceTw: string;
     selectedCategory: string;
     selectedSubcategory: string;
     itemIngredientsAr?: string;
@@ -413,25 +411,15 @@ const Popup: React.FC<Props> = ({
                   </div>
 
                   <div className="flex flex-col gap-3 md:col-span-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6">
                       <div className="relative group">
-                        <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-1 block">{t('common.dine_in') || "Dine-In Price"}</label>
+                        <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-1 block">{t('common.price') || "السعر"}</label>
                         <input
                           className={inputClass}
                           placeholder={t('admin.item_price_placeholder')}
                           value={editItemValues.itemPrice}
                           onChange={(e) => setEditItemValues({ ...editItemValues, itemPrice: e.target.value })}
                         />
-                      </div>
-                      <div className="relative group">
-                        <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-1 block">{t('common.takeaway') || "Takeaway Price"}</label>
-                        <input
-                          className={inputClass}
-                          placeholder={t('admin.item_price_placeholder')}
-                          value={editItemValues.priceTw || ""}
-                          onChange={(e) => setEditItemValues({ ...editItemValues, priceTw: e.target.value })}
-                        />
-                        <span className="text-[10px] text-gray-400 px-2 mt-1 block">إذا فارغ سيتم استخدام سعر الصالة</span>
                       </div>
                     </div>
                   </div>

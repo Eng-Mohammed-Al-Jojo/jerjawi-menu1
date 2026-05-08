@@ -28,23 +28,23 @@ export interface MenuPriceOption {
   price: number;
 }
 
-export function getMenuPriceOptions(item: { price?: unknown; priceTw?: unknown }): MenuPriceOption[] {
-  const dineInPrices = toSafeNumberList(item.price);
-  const takeawayPrices = toSafeNumberList(item.priceTw);
+export function getMenuPriceOptions(item: { price?: unknown }): MenuPriceOption[] {
+  const prices = toSafeNumberList(item.price);
   const options: MenuPriceOption[] = [];
 
-  dineInPrices.forEach((price) => options.push({ type: "dineIn", label: "DIN", price }));
-  takeawayPrices.forEach((price) => options.push({ type: "takeaway", label: "TW", price }));
+  prices.forEach((price) => {
+    options.push({ type: "dineIn", label: "DIN", price });
+  });
 
   return options;
 }
 
 export function getMenuPricesForType(
-  item: { price?: unknown; priceTw?: unknown },
+  item: { price?: unknown },
   type: PriceType
 ): MenuPriceOption[] {
-  const prices = type === "takeaway" ? toSafeNumberList(item.priceTw) : toSafeNumberList(item.price);
-  const label = type === "takeaway" ? "TW" : "DIN";
+  const prices = toSafeNumberList(item.price);
+  const label = type === "dineIn" ? "DIN" : "TW";
 
   return prices.map((price) => ({ type, label, price }));
 }
@@ -53,11 +53,9 @@ export function isPriceTypeEnabled(
   type: PriceType,
   config: { dineInEnabled: boolean; takeawayEnabled: boolean } | Record<PriceType, boolean>
 ) {
-  if ("dineIn" in config) {
-    return config[type];
-  }
-
-  return type === "takeaway" ? config.takeawayEnabled : config.dineInEnabled;
+  if (type === "dineIn") return (config as any).dineInEnabled ?? true;
+  if (type === "takeaway") return (config as any).takeawayEnabled ?? true;
+  return true;
 }
 
 export function getItemOrderPermissions(

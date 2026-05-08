@@ -8,17 +8,17 @@ import ItemDetailsDrawer from "../components/menu/ItemDetailsDrawer";
 import { HiSparkles } from "react-icons/hi";
 import FeaturedModal from "../components/menu/FeaturedModal";
 import LoadingScreen from "../components/common/LoadingScreen";
+import OrderModeTabs from "../components/menu/OrderModeTabs";
 import { motion } from "framer-motion";
 import { FirebaseService } from "../services/firebaseService";
 import OrderStatusButton from "../components/cart/OrderStatusButton";
 import GlassButton from "../components/common/GlassButton";
 import { getAssetUrl } from "../utils/assetUtils";
 import { useMenuStore } from "../store/useMenuStore";
-import OrderModeTabs from "../components/menu/OrderModeTabs";
+
 
 export default function MenuPage() {
   const { t } = useTranslation();
-  const { selectedOrderMode } = useMenuStore();
 
   const [showFeaturedModal, setShowFeaturedModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +37,10 @@ export default function MenuPage() {
     // Sync Order Modes Config
     const unsubModes = FirebaseService.listen("settings/orderModes", (value) => {
       if (value) {
-        useMenuStore.getState().setOrderModesConfig(value);
+        useMenuStore.getState().setOrderModesConfig({
+          dineInEnabled: value.dineInEnabled ?? true,
+          takeawayEnabled: value.takeawayEnabled ?? true,
+        });
       }
     });
 
@@ -100,16 +103,28 @@ export default function MenuPage() {
             />
           </motion.div>
 
+          {/* Welcome Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="mt-5 text-center px-4"
+          >
+            <h3 className="text-lg font-bold text-(--menu-primary-800) leading-snug">
+              أهلاً بكم في مرطبات الجرجاوي 🧃
+            </h3>
+
+          </motion.div>
+
+          {/* Takeaway Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-7 flex items-center gap-2 px-4 py-2 rounded-full border border-(--menu-primary-200) bg-(--menu-primary-50) text-(--menu-primary-800) text-sm font-semibold shadow-sm"
+            className="mt-4 flex items-center gap-2 px-4 py-2 pl-8 rounded-full border border-(--menu-primary-200) bg-(--menu-primary-50) text-(--menu-primary-800) text-sm font-semibold shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-(--menu-primary-500) animate-pulse" />
-            {selectedOrderMode === "dineIn"
-              ? t("menu.notice.dineIn")
-              : t("menu.notice.takeaway")}
+            {t("menu.notice.dineIn")}
           </motion.div>
 
           {/* ✅ Order Mode Tabs */}
@@ -119,7 +134,10 @@ export default function MenuPage() {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="w-full relative z-10"
           >
-            <OrderModeTabs />
+            {useMenuStore.getState().orderModesConfig.dineInEnabled &&
+              useMenuStore.getState().orderModesConfig.takeawayEnabled && (
+                <OrderModeTabs />
+              )}
           </motion.div>
 
         </section>

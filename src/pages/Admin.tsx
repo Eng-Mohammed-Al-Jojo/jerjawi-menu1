@@ -46,14 +46,12 @@ export default function Admin() {
   const [editItemValues, setEditItemValues] = useState<{
     itemNameAr: string;
     itemPrice: string;
-    priceTw: string;
     selectedCategory: string;
     selectedSubcategory: string;
     itemIngredientsAr?: string;
   }>({
     itemNameAr: "",
     itemPrice: "",
-    priceTw: "",
     selectedCategory: "",
     selectedSubcategory: "",
     itemIngredientsAr: "",
@@ -269,14 +267,13 @@ export default function Admin() {
       nameAr: editItemValues.itemNameAr,
       ingredientsAr: normalizeIngredients(editItemValues.itemIngredientsAr || ""),
       price: editItemValues.itemPrice,
-      priceTw: editItemValues.priceTw?.trim() !== "" ? editItemValues.priceTw : null,
       categoryId: editItemValues.selectedCategory,
       subcategoryId: editItemValues.selectedSubcategory || null,
     });
     setPopup({ type: null });
     setEditItemId("");
     setEditItemValues({
-      itemNameAr: "", itemPrice: "", priceTw: "",
+      itemNameAr: "", itemPrice: "",
       selectedCategory: "", selectedSubcategory: "", itemIngredientsAr: ""
     });
     showNotification(t('common.success') + " ✅");
@@ -300,7 +297,6 @@ export default function Admin() {
     sheet.columns = [
       { header: t('admin.excel_name'), key: "name", width: 30 },
       { header: t('admin.excel_price'), key: "price", width: 15 },
-      { header: t('admin.excel_price_tw'), key: "priceTw", width: 15 },
       { header: t('admin.excel_category'), key: "categoryName", width: 30 },
       { header: t('admin.excel_ingredients'), key: "ingredients", width: 40 },
       { header: t('admin.excel_available'), key: "visible", width: 10 },
@@ -311,7 +307,6 @@ export default function Admin() {
       sheet.addRow({
         name: item.nameAr,
         price: item.price,
-        priceTw: item.priceTw || "",
         categoryName: categories[item.categoryId]?.nameAr ?? t('admin.excel_not_specified'),
         subcategoryName: item.subcategoryId ? (subcategories[item.subcategoryId]?.nameAr ?? "") : "",
         ingredients: item.ingredientsAr || "",
@@ -527,7 +522,6 @@ export default function Admin() {
                     setEditItemValues({
                       itemNameAr: item.nameAr || "",
                       itemPrice: item.price || "",
-                      priceTw: item.priceTw || "",
                       selectedCategory: item.categoryId || "",
                       selectedSubcategory: item.subcategoryId || "",
                       itemIngredientsAr: item.ingredientsAr || "",
