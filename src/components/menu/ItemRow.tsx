@@ -61,14 +61,14 @@ const ItemRow = React.memo(({ item, orderSystem, onClick, onDetailsClick }: Prop
         viewport={{ once: true, margin: "50px" }}
         className={`
           relative flex items-center justify-between w-full rounded-2xl border border-(--menu-border)
-          min-h-[84px] py-2 pr-24 pl-2 bg-(--menu-card-elevated) mb-1 mr-1
+          min-h-[88px] py-1.5 pr-28 pl-2 bg-(--menu-card-elevated) my-1 mr-1
           transition-all duration-300 group shadow-soft
           ${unavailable ? "opacity-60 grayscale mt-4 mb-4" : "hover:bg-(--menu-surface) cursor-pointer active:scale-[0.99]"}
         `}
         onClick={handleCardClick}
       >
         {/* IMAGE */}
-        <div className="absolute right-11 translate-x-1/2 w-20 h-20 z-10">
+        <div className="absolute right-12 top-1/2 -translate-y-1/2 translate-x-1/2 w-24 h-24 z-10">
           <img
             src={item.image ? `/images/${item.image}` : "/logo.png"}
             alt={itemName}
@@ -97,12 +97,18 @@ const ItemRow = React.memo(({ item, orderSystem, onClick, onDetailsClick }: Prop
         <div className="flex flex-col items-end gap-1.5 shrink-0 min-w-[76px] pl-1.5">
           <div className="flex flex-col items-end gap-1">
             {priceOptions.length > 0 ? (
-              <div className="flex items-center gap-1 rounded-full bg-(--menu-surface) border border-(--menu-border) px-2 py-0.5">
-
-                <span className="text-(--menu-primary-800) font-black text-[13px] leading-none">
-                  {priceOptions.map((option) => option.price).join(" / ")}
-                </span>
-                <span className="text-[10px] font-bold text-(--menu-primary-700)">₪</span>
+              <div className="flex flex-row flex-wrap items-center justify-end gap-1">
+                {priceOptions.map((option, idx) => (
+                  <span
+                    key={`${option.type}-${option.price}-${idx}`}
+                    className="flex items-center gap-0.5 rounded-full bg-(--menu-surface) border border-(--menu-border) px-2 py-0.5"
+                  >
+                    <span className="text-(--menu-primary-800) font-black text-[13px] leading-none">
+                      {option.price}
+                    </span>
+                    <span className="text-[9px] font-bold text-(--menu-primary-700)">₪</span>
+                  </span>
+                ))}
               </div>
             ) : (
               <span className="text-[10px] font-bold text-(--menu-text-muted)">—</span>

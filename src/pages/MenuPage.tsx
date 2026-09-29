@@ -90,7 +90,7 @@ export default function MenuPage() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex items-center justify-center w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-(--menu-card-elevated) border border-(--menu-border) shadow-premium"
+            className="relative flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-(--menu-card-elevated) border border-(--menu-border) shadow-premium"
           >
             <motion.img
               initial={{ y: 20, opacity: 0, scale: 0.95 }}
@@ -98,7 +98,7 @@ export default function MenuPage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               style={{ willChange: "transform, opacity" }}
               src={getAssetUrl('logo.png')}
-              className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
+              className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
               alt="Logo"
             />
           </motion.div>
