@@ -328,7 +328,7 @@ export default function Admin() {
 
   if (!authOk) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white p-6 relative overflow-hidden">
+      <div className="admin-wrap min-h-screen flex items-center justify-center bg-white p-4 sm:p-6 relative overflow-hidden">
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-30 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-100 rounded-full blur-[120px]" />
@@ -338,32 +338,32 @@ export default function Admin() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md bg-white p-10 rounded-[2.5rem] shadow-premium border border-gray-100 relative z-10"
+          className="w-full max-w-[22rem] sm:max-w-sm bg-white p-5 sm:p-7 rounded-3xl shadow-premium border border-gray-100 relative z-10"
         >
-          <div className="flex flex-col items-center mb-10">
-            <div className="w-24 h-24 bg-white p-3 rounded-3xl shadow-soft mb-8 border border-gray-50 flex items-center justify-center">
+          <div className="flex flex-col items-center mb-6 sm:mb-7">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white p-2 rounded-2xl shadow-soft mb-4 sm:mb-5 border border-gray-50 flex items-center justify-center">
               <img src={getAssetUrl('logo.png')} alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-3xl font-black text-gray-900 text-center leading-tight">{t('admin.login_title')}</h1>
-            <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[11px] mt-3 text-center">{t('admin.login_subtitle')}</p>
+            <h1 className="text-xl sm:text-2xl font-black text-gray-900 text-center leading-snug">{t('admin.login_title')}</h1>
+            <p className="text-gray-400 font-bold uppercase tracking-[0.18em] text-[10px] mt-1.5 text-center">{t('admin.login_subtitle')}</p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-3 sm:space-y-4">
             <div className="relative group">
-              <FiMail className={`${i18n.language === 'ar' ? 'right-5' : 'left-5'} absolute top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors`} />
+              <FiMail size={16} className={`${i18n.language === 'ar' ? 'right-4' : 'left-4'} absolute top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors`} />
               <input
                 type="email"
-                className={`w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 ${i18n.language === 'ar' ? 'pr-14 pl-6 text-right' : 'pl-14 pr-6'} text-sm font-bold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all`}
+                className={`w-full bg-gray-50 border border-gray-100 rounded-xl h-11 ${i18n.language === 'ar' ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4'} text-[13px] font-bold outline-none focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all`}
                 placeholder={t('admin.email_placeholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="relative group">
-              <FiLock className={`${i18n.language === 'ar' ? 'right-5' : 'left-5'} absolute top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors`} />
+              <FiLock size={16} className={`${i18n.language === 'ar' ? 'right-4' : 'left-4'} absolute top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors`} />
               <input
                 type="password"
-                className={`w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 ${i18n.language === 'ar' ? 'pr-14 pl-6 text-right' : 'pl-14 pr-6'} text-sm font-bold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all`}
+                className={`w-full bg-gray-50 border border-gray-100 rounded-xl h-11 ${i18n.language === 'ar' ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4'} text-[13px] font-bold outline-none focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all`}
                 placeholder={t('admin.password_placeholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -374,16 +374,16 @@ export default function Admin() {
             <button
               onClick={login}
               disabled={loading}
-              className="w-full h-14 bg-primary text-white rounded-2xl font-black text-lg shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              className="admin-btn w-full h-11 sm:h-12 bg-primary text-white rounded-xl font-black text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-px active:translate-y-0 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {loading ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>⚙️</motion.div> : <FiUser />}
+              {loading ? <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>⚙️</motion.div> : <FiUser size={16} />}
               {t('admin.login_btn')}
             </button>
 
-            <div className="text-center pt-2">
+            <div className="text-center pt-1">
               <button
                 onClick={() => setResetPasswordPopup(true)}
-                className="text-xs font-bold text-secondary-600 hover:text-secondary-700 transition-colors uppercase tracking-widest"
+                className="text-[11px] font-bold text-secondary-600 hover:text-secondary-700 transition-colors uppercase tracking-widest"
               >
                 {t('admin.forgot_password')}
               </button>
@@ -422,54 +422,54 @@ export default function Admin() {
 
   // ================= ADMIN PANEL UI =================
   return (
-    <div className="min-h-screen bg-(--bg-main) flex justify-center py-6 sm:py-10 px-4 md:px-10">
-      <div className="w-full max-w-6xl space-y-8 sm:space-y-10">
+    <div className="admin-wrap min-h-screen bg-(--bg-main) flex justify-center py-3 px-3 sm:py-6 sm:px-6">
+      <div className="w-full max-w-5xl space-y-4 sm:space-y-6">
         {/* Modern Header */}
-        <header className="bg-white border border-gray-100 p-8 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 shadow-premium">
-          <div className="flex items-center gap-6">
-            <div className="w-16 h-16 bg-white p-2 rounded-2xl shadow-soft border border-gray-50 flex items-center justify-center">
+        <header className="bg-white border border-gray-100 p-3 sm:p-5 rounded-2xl sm:rounded-3xl flex flex-col md:flex-row justify-between md:items-center gap-3 sm:gap-4 shadow-soft">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 bg-white p-1.5 rounded-xl shadow-soft border border-gray-50 flex items-center justify-center shrink-0">
               <img src={getAssetUrl('logo.png')} alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <div>
-              <h1 className="text-2xl font-black text-gray-900">{t('admin.menu_management')}</h1>
-              <div className="flex flex-wrap items-center gap-4 mt-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.4)]" />
-                  <p className="text-gray-400 text-[10px] uppercase font-bold tracking-[0.2em]">{t('admin.dashboard_active')}</p>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-lg font-black text-gray-900 leading-tight truncate">{t('admin.menu_management')}</h1>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.4)]" />
+                  <p className="text-gray-400 text-[10px] uppercase font-bold tracking-[0.14em]">{t('admin.dashboard_active')}</p>
                 </div>
                 <button
                   onClick={() => navigate("/admin/orders")}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-[11px] font-bold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95 uppercase tracking-wider"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-[11px] font-bold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95 uppercase tracking-wider"
                 >
-                  <FiPackage /> {t('admin.orders')}
+                  <FiPackage size={13} /> {t('admin.orders')}
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 flex-wrap justify-center w-full md:w-auto">
+          <div className="flex items-center gap-2 flex-wrap w-full md:w-auto">
             {/* Action Group */}
-            <div className="flex items-center gap-1.5 bg-gray-50 p-2 rounded-2xl border border-gray-100 shadow-inner">
-              <button onClick={() => setShowOrderSettings(true)} className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white hover:text-primary hover:shadow-sm text-gray-400 transition-all" title={t('admin.settings')}>
-                <FiSettings size={20} />
+            <div className="flex items-center gap-0.5 bg-gray-50 p-1.5 rounded-xl border border-gray-100">
+              <button onClick={() => setShowOrderSettings(true)} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white hover:text-primary hover:shadow-sm text-gray-500 transition-all" title={t('admin.settings')}>
+                <FiSettings size={17} />
               </button>
-              <div className="w-px h-6 bg-gray-200 mx-1" />
-              <button onClick={exportToExcel} className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white hover:text-emerald-600 hover:shadow-sm text-gray-400 transition-all" title={t('admin.export_excel')}>
-                <FiUpload size={20} />
+              <div className="w-px h-5 bg-gray-200 mx-0.5" />
+              <button onClick={exportToExcel} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white hover:text-emerald-600 hover:shadow-sm text-gray-500 transition-all" title={t('admin.export_excel')}>
+                <FiUpload size={17} />
               </button>
-              <button onClick={() => document.getElementById("excelUpload")?.click()} className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white hover:text-blue-600 hover:shadow-sm text-gray-400 transition-all" title={t('admin.import_excel')}>
-                <FiDownload size={20} />
+              <button onClick={() => document.getElementById("excelUpload")?.click()} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white hover:text-blue-600 hover:shadow-sm text-gray-500 transition-all" title={t('admin.import_excel')}>
+                <FiDownload size={17} />
               </button>
-              <button onClick={exportToJSON} className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white hover:text-secondary-600 hover:shadow-sm text-gray-400 transition-all" title={t('admin.backup')}>
-                <FiDatabase size={20} />
+              <button onClick={exportToJSON} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white hover:text-secondary-600 hover:shadow-sm text-gray-500 transition-all" title={t('admin.backup')}>
+                <FiDatabase size={17} />
               </button>
             </div>
 
             <button
               onClick={() => setPopup({ type: "logout" })}
-              className="flex items-center gap-2 px-6 h-14 rounded-2xl bg-secondary-50 text-secondary font-bold text-sm hover:bg-secondary hover:text-white transition-all border border-secondary-100 shadow-sm w-full sm:w-auto justify-center active:scale-95"
+              className="admin-btn flex items-center gap-1.5 px-4 h-10 rounded-xl bg-secondary-50 text-secondary font-bold text-[13px] hover:bg-secondary hover:text-white transition-all border border-secondary-100 flex-1 sm:flex-none justify-center active:scale-95"
             >
-              <FiLogOut /> {t('admin.logout')}
+              <FiLogOut size={15} /> {t('admin.logout')}
             </button>
           </div>
         </header>
@@ -481,13 +481,13 @@ export default function Admin() {
         }} />
 
         {/* Dashboard Sections */}
-        <main className="space-y-12 pb-20">
+        <main className="space-y-4 sm:space-y-6 pb-10 sm:pb-14">
 
           {/* Section 2: Categories */}
-          <section className="space-y-6">
-            <div className="flex items-center gap-3 px-4">
-              <FiLayout className="text-primary text-xl" />
-              <h2 className="text-2xl font-black text-(--text-main)">{t('admin.categories')}</h2>
+          <section className="space-y-2.5 sm:space-y-3">
+            <div className="flex items-center gap-2 px-1 sm:px-2">
+              <FiLayout className="text-primary text-base" />
+              <h2 className="text-base sm:text-lg font-black text-(--text-main)">{t('admin.categories')}</h2>
             </div>
             <CategorySection
               categories={categories}
@@ -503,10 +503,10 @@ export default function Admin() {
           </section>
 
           {/* Section 3: Items */}
-          <section className="space-y-6">
-            <div className="flex items-center gap-3 px-4">
-              <FiPackage className="text-secondary text-xl" />
-              <h2 className="text-2xl font-black text-(--text-main)">{t('admin.products')}</h2>
+          <section className="space-y-2.5 sm:space-y-3">
+            <div className="flex items-center gap-2 px-1 sm:px-2">
+              <FiPackage className="text-secondary text-base" />
+              <h2 className="text-base sm:text-lg font-black text-(--text-main)">{t('admin.products')}</h2>
             </div>
             <ItemSection
               categories={categories}

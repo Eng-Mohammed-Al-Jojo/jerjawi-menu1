@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiCheckCircle, FiInfo, FiShoppingCart, FiX } from "react-icons/fi";
+import { FiMinus, FiPlus, FiShoppingCart, FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import type { Item } from "./Menu";
 import { getIngredientList } from "../../utils/stringUtils";
@@ -22,212 +22,221 @@ export default function ItemDetailsDrawer({ item, isOpen, onClose, orderSystem }
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedPriceIdx, setSelectedPriceIdx] = useState(0);
   const { selectedOrderMode, orderModesConfig } = useMenuStore();
+
+  useEffect(() => {
+    setQuantity(1);
+    setSelectedPriceIdx(0);
+    setPickerOpen(false);
+  }, [item?.id, isOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   if (!item) return null;
 
   const itemName = item.nameAr || item.name || "";
   const itemDescription = item.ingredientsAr || item.ingredients || "";
-  
+  const ingredients = getIngredientList(itemDescription);
+
   const priceOptions = getMenuPriceOptions(item);
   const hasDualPricing = priceOptions.length > 1;
   const itemOrderPermissions = getItemOrderPermissions(item, orderModesConfig);
   const orderableOptions = priceOptions.filter((option) => isPriceTypeEnabled(option.type, itemOrderPermissions));
   const isCurrentTabOrderingEnabled = orderSystem && itemOrderPermissions[selectedOrderMode];
+  const activeOption = orderableOptions[selectedPriceIdx] || orderableOptions[0];
+  const imgSrc = item.image ? `/images/${item.image}` : "/logo.png";
 
-  const commitAdd = (price: number, priceType: PriceType) => {
+  const commitAdd = (price: number, priceType: PriceType, qty = quantity) => {
     if (!item || isAdding) return;
     setIsAdding(true);
-
-    addItem(item, price, 1, priceType);
-
-    // Modern Feedback Notification
+    addItem(item, price, qty, priceType);
     toast.success(`${itemName} ${t('common.added_to_cart')}`, {
       icon: '🛒',
       position: 'top-center',
       style: {
-        borderRadius: '24px',
+        borderRadius: '16px',
         background: 'var(--bg-card)',
         color: 'var(--text-main)',
         border: '1px solid var(--border-color)',
         fontFamily: 'Cairo',
         fontWeight: 'bold',
-        fontSize: '14px'
+        fontSize: '13px'
       }
     });
-
-    // Auto-close with smooth delay
     setTimeout(() => {
       onClose();
       setIsAdding(false);
-    }, 600);
+    }, 500);
   };
 
   const handleAddToOrder = () => {
-    if (hasDualPricing) {
-      setPickerOpen(true);
-      return;
+    if (hasDualPricing && orderableOptions.length > 1 && pickerOpen === false && selectedPriceIdx === 0 && orderableOptions.length !== 1) {
+      // inline selection is visible, just commit active option
     }
-
-    const onlyOption = orderableOptions[0];
-    if (onlyOption) {
-      commitAdd(onlyOption.price, onlyOption.type);
-    }
+    if (activeOption) commitAdd(activeOption.price, activeOption.type);
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-100 flex justify-start overflow-hidden">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-100 flex items-end sm:items-end justify-center">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            style={{ willChange: "opacity" }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-0"
+            className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
           />
 
-          {/* Drawer Body - Slides from Left for RTL luxury feel */}
+          {/* Bottom sheet */}
           <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-md sm:max-w-lg bg-(--bg-card) h-full shadow-2xl border-r border-white/10 z-10 flex flex-col"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            drag="y"
+            dragConstraints={{ top: 0 }}
+            dragElastic={0.08}
+            onDragEnd={(_, info) => {
+              if (info.offset.y > 110 || info.velocity.y > 700) onClose();
+            }}
+            className="relative w-full sm:max-w-md bg-(--menu-card-bg) rounded-t-[1.75rem] shadow-premium overflow-hidden border-t border-x border-(--menu-border) flex flex-col max-h-[92dvh]"
           >
-            {/* Header / Banner Area */}
-            <div className="relative h-64 sm:h-80 overflow-hidden shrink-0">
-              <motion.img
-                initial={{ scale: 1.05, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                style={{ willChange: "transform, opacity" }}
-                src={item.image ? `/images/${item.image}` : "/logo.png"}
+            {/* Drag handle */}
+            <div className="pt-2.5 pb-1 flex justify-center shrink-0 bg-(--menu-card-bg) relative z-10">
+              <div className="w-10 h-1.5 rounded-full bg-(--menu-border)" />
+            </div>
+
+            {/* Hero — clearer image, taller for detail */}
+            <div className="relative h-56 sm:h-64 shrink-0 overflow-hidden bg-black">
+              <img
+                src={imgSrc}
                 alt={itemName}
                 className="w-full h-full object-cover"
                 onError={(e) => { (e.target as HTMLImageElement).src = "/logo.png"; }}
               />
-              <div className="absolute inset-0 bg-linear-to-t from-(--bg-card) via-transparent to-black/20" />
-
-              {/* Close Button - Top Left */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/10" />
+              <button
                 onClick={onClose}
-                className="absolute top-4 left-4 w-10 h-10 rounded-2xl bg-red-500/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 active:scale-95 transition-all z-20"
                 aria-label="Close"
+                className="absolute top-3 left-3 w-9 h-9 rounded-xl bg-black/45 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/65 active:scale-95 transition-all"
               >
-                <FiX size={18} />
-              </motion.button>
-
-              <div className="absolute bottom-6 right-6 text-right">
-                <motion.h2
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  className="text-3xl font-bold text-white drop-shadow-2xl"
-                >
+                <FiX size={16} />
+              </button>
+              <div className="absolute bottom-3.5 right-4 left-4 flex items-end justify-between gap-3">
+                <h2 className="text-xl sm:text-2xl font-black text-white leading-tight drop-shadow-xl text-right flex-1 min-w-0 line-clamp-2">
                   {itemName}
-                </motion.h2>
-                <div className="flex items-center justify-end gap-4 mt-2 pl-4">
-                  {priceOptions.map((p) => (
-                    <div key={p.type} className="flex flex-col items-end">
-                      <div className="flex items-baseline gap-1 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-2xl border border-white/10">
-                        <motion.span
-                          key={`${p.type}-${p.price}`}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="text-xl font-bold text-primary"
-                        >
-                          {p.price}
-                        </motion.span>
-                        <span className="text-xs font-bold text-primary opacity-70">₪</span>
-                      </div>
-                      <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mt-1 mr-1">
-                        {p.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                </h2>
+                {activeOption && (
+                  <div className="flex items-center gap-1 bg-white/95 backdrop-blur px-3 py-2 rounded-full border border-white/40 shrink-0 shadow-lg">
+                    <span className="text-base font-black text-(--menu-primary-800) leading-none">{activeOption.price}</span>
+                    <span className="text-[10px] font-bold text-(--menu-primary-700)">₪</span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Content Scroll Area */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-10 space-y-10">
-
-              {/* Ingredients Section */}
-              <section className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    <FiInfo size={20} />
-                  </div>
-                  <h3 className="text-lg font-bold text-(--text-main)">{t('admin.ingredients_label')}</h3>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute top-0 bottom-0 right-1 w-px bg-linear-to-b from-primary/30 via-primary/5 to-transparent" />
-                  <div className="space-y-4 pr-6">
-                    {getIngredientList(itemDescription).length > 0 ? (
-                      getIngredientList(itemDescription).map((ingredient, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: 10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.05 }}
-                          style={{ willChange: "transform, opacity" }}
-                          className="flex items-start gap-3 group"
-                        >
-                          <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0 group-hover:scale-150 transition-transform" />
-                          <span className="text-sm sm:text-base font-bold text-(--text-main) leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
-                            {ingredient}
-                          </span>
-                        </motion.div>
-                      ))
-                    ) : (
-                      <p className="text-sm font-bold text-(--text-muted) italic">
-                        {t('menu.no_description')}
-                      </p>
-                    )}
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 sm:px-5 pt-4 pb-3 space-y-4">
+              {/* Prices */}
+              {orderableOptions.length > 1 ? (
+                <div className="space-y-2">
+                  <p className="text-[11px] font-black text-(--menu-text-muted) uppercase tracking-widest px-0.5">
+                    {t("menu.choose_price") || "اختر السعر"}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {orderableOptions.map((opt, idx) => (
+                      <button
+                        key={`${opt.type}-${opt.price}-${idx}`}
+                        onClick={() => setSelectedPriceIdx(idx)}
+                        className={`h-11 rounded-xl border text-sm font-black transition-all active:scale-95 flex items-center justify-center gap-1 ${selectedPriceIdx === idx
+                          ? "bg-(--menu-primary) text-white border-(--menu-primary) shadow-lg shadow-primary/20"
+                          : "bg-(--menu-surface) text-(--menu-text) border-(--menu-border)"
+                          }`}
+                      >
+                        {opt.price} <span className="text-[11px] opacity-80">₪</span>
+                        {opt.label && <span className="text-[10px] opacity-60 font-bold">· {opt.label}</span>}
+                      </button>
+                    ))}
                   </div>
                 </div>
-              </section>
+              ) : null}
 
-              {/* Quality Badges */}
-              <section className="pt-6 border-t border-(--border-color)/30 grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-3xl bg-primary/5 border border-primary/10 flex flex-col gap-2 group hover:bg-primary/10 transition-colors">
-                  <FiCheckCircle className="text-primary" size={20} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary/60">{t('menu.fresh_daily')}</span>
-                  <p className="text-xs font-bold text-(--text-main)">{t('menu.fresh_daily_desc') || "يتم التحضير بمكونات طازجة يومياً"}</p>
-                </div>
-                <div className="p-4 rounded-3xl bg-secondary/5 border border-secondary/10 flex flex-col gap-2 group hover:bg-secondary/10 transition-colors">
-                  <FiCheckCircle className="text-secondary" size={20} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-secondary/60">{t('menu.quality_guaranteed')}</span>
-                  <p className="text-xs font-bold text-(--text-main)">{t('menu.quality_desc') || "نضمن لك أعلى مستويات الجودة"}</p>
-                </div>
-              </section>
-
-            </div>
-
-            {/* Action Sticky Footer - Add to Order Primary Button */}
-            {isCurrentTabOrderingEnabled && (
-            <div className="p-6 sm:p-10 border-t border-(--border-color)/30 bg-(--bg-card)">
-              <button
-                onClick={handleAddToOrder}
-                disabled={isAdding}
-                className={`w-full py-3 bg-primary text-white rounded-3xl font-bold text-lg shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 ${isAdding ? 'opacity-50 cursor-not-allowed shadow-none' : ''}`}
-              >
-                {isAdding ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              {/* Ingredients */}
+              <div className="space-y-2">
+                <p className="text-[11px] font-black text-(--menu-text-muted) uppercase tracking-widest px-0.5">
+                  {t('admin.ingredients_label')}
+                </p>
+                {ingredients.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {ingredients.map((ing, idx) => (
+                      <span
+                        key={idx}
+                        className="text-xs font-bold text-(--menu-text) bg-(--menu-surface) border border-(--menu-border) px-2.5 py-1.5 rounded-full"
+                      >
+                        {ing}
+                      </span>
+                    ))}
+                  </div>
                 ) : (
-                  <>
-                    <FiShoppingCart size={22} />
-                    {t('common.add_to_order')}
-                  </>
+                  <p className="text-xs font-bold text-(--menu-text-muted) italic px-0.5">
+                    {t('menu.no_description')}
+                  </p>
                 )}
-              </button>
+              </div>
+
+              {/* Quantity */}
+              {isCurrentTabOrderingEnabled && (
+                <div className="flex items-center justify-between bg-(--menu-surface) border border-(--menu-border) rounded-2xl p-2 pr-4">
+                  <span className="text-xs font-black text-(--menu-text) uppercase tracking-widest">
+                    {t("common.quantity") || "الكمية"}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-9 h-9 rounded-xl bg-white text-(--menu-text) flex items-center justify-center shadow-sm border border-(--menu-border) active:scale-95 transition-all"
+                    >
+                      <FiMinus size={15} />
+                    </button>
+                    <span className="text-base font-black w-6 text-center text-(--menu-text)">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-9 h-9 rounded-xl bg-white text-(--menu-text) flex items-center justify-center shadow-sm border border-(--menu-border) active:scale-95 transition-all"
+                    >
+                      <FiPlus size={15} />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Footer */}
+            {isCurrentTabOrderingEnabled && activeOption && (
+              <div className="p-4 pt-2 bg-(--menu-card-bg) border-t border-(--menu-border) shrink-0">
+                <button
+                  onClick={handleAddToOrder}
+                  disabled={isAdding}
+                  className="w-full h-12 bg-(--menu-primary) text-white rounded-2xl font-black text-[15px] shadow-xl shadow-primary/25 hover:brightness-105 active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isAdding ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <FiShoppingCart size={17} />
+                      <span>{t("common.add_to_order")}</span>
+                      <span className="opacity-40">|</span>
+                      <span>{activeOption.price * quantity}₪</span>
+                    </>
+                  )}
+                </button>
+              </div>
             )}
 
             {hasDualPricing && (
@@ -236,7 +245,7 @@ export default function ItemDetailsDrawer({ item, isOpen, onClose, orderSystem }
                 onClose={() => setPickerOpen(false)}
                 options={priceOptions}
                 enabledTypes={itemOrderPermissions}
-                onSelect={commitAdd}
+                onSelect={(p, type) => commitAdd(p, type)}
               />
             )}
           </motion.div>

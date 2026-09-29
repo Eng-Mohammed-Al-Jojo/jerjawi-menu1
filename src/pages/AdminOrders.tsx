@@ -177,39 +177,39 @@ export default function AdminOrdersPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-['Cairo']">
-            <div className="max-w-7xl mx-auto space-y-12">
+        <div className="admin-wrap min-h-screen bg-gray-50 p-3 sm:p-5 font-['Cairo']">
+            <div className="max-w-6xl mx-auto space-y-4 sm:space-y-5">
 
                 {/* Header & Main Toggle */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-                    <div className="flex items-center gap-6">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 sm:gap-4">
+                    <div className="flex items-center gap-2.5">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate(-1)}
-                            className="w-14 h-14 flex items-center justify-center bg-white text-gray-900 rounded-2xl border border-gray-100 shadow-soft hover:shadow-premium transition-all"
+                            className="w-10 h-10 flex items-center justify-center bg-white text-gray-900 rounded-xl border border-gray-100 shadow-soft hover:shadow-premium transition-all shrink-0"
                         >
-                            {isRtl ? <FiArrowRight size={24} /> : <FiArrowRight className="rotate-180" size={24} />}
+                            {isRtl ? <FiArrowRight size={18} /> : <FiArrowRight className="rotate-180" size={18} />}
                         </motion.button>
-                        <div className="text-right">
-                            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{t('admin.orders_board')}</h1>
-                            <p className="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <div className="text-right min-w-0">
+                            <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight leading-tight">{t('admin.orders_board')}</h1>
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.14em] mt-0.5 flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                                 {viewMode === "history" ? t('admin.archived_orders') : viewMode === "whatsapp" ? t('admin.source_whatsapp') : t('admin.active_orders')}
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 w-full lg:w-auto">
+                        <div className="flex items-center gap-1.5">
                             <button
                                 onClick={() => setIsApprovalsModalOpen(true)}
-                                className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-white border border-gray-100 shadow-soft transition-all relative ${payments.some(p => p.status === 'pending') ? 'text-amber-500' : 'text-gray-400'}`}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-white border border-gray-100 shadow-soft transition-all relative ${payments.some(p => p.status === 'pending') ? 'text-amber-500' : 'text-gray-400'}`}
                                 title={t('admin.payment_requests')}
                             >
-                                <FiBell />
+                                <FiBell size={17} />
                                 {payments.filter(p => p.status === 'pending').length > 0 && (
-                                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce">
+                                    <span className="absolute -top-1 -right-1 w-4.5 h-4.5 min-w-4 min-h-4 px-1 bg-amber-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white animate-bounce">
                                         {payments.filter(p => p.status === 'pending').length}
                                     </span>
                                 )}
@@ -217,56 +217,56 @@ export default function AdminOrdersPage() {
 
                             <button
                                 onClick={() => setIsPaymentModalOpen(true)}
-                                className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-white text-gray-400 border border-gray-100 hover:text-primary hover:border-primary/30 shadow-soft transition-all"
+                                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-white text-gray-400 border border-gray-100 hover:text-primary hover:border-primary/30 shadow-soft transition-all"
                                 title={t('admin.payment_methods')}
                             >
-                                <FiDollarSign />
+                                <FiDollarSign size={17} />
                             </button>
 
                             <button
                                 onClick={() => setShowAnalytics(!showAnalytics)}
-                                className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all border ${showAnalytics ? 'bg-primary text-white border-primary shadow-lg' : 'bg-white text-gray-400 border-gray-100 hover:text-primary hover:border-primary/30 shadow-soft'}`}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all border ${showAnalytics ? 'bg-primary text-white border-primary shadow-lg' : 'bg-white text-gray-400 border-gray-100 hover:text-primary hover:border-primary/30 shadow-soft'}`}
                                 title="الاحصائيات"
                             >
-                                <FiBarChart2 />
+                                <FiBarChart2 size={17} />
                             </button>
 
 
-                            <div className="flex bg-white p-1.5 gap-1.5 rounded-2xl border border-gray-100 shadow-inner">
+                            <div className="flex bg-white p-1 gap-1 rounded-xl border border-gray-100">
                                 <button
                                     onClick={() => updateSettings('system', !settings.system)}
-                                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${settings.system ? 'text-primary bg-primary/10' : 'text-gray-400 hover:bg-gray-50'}`}
+                                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${settings.system ? 'text-primary bg-primary/10' : 'text-gray-400 hover:bg-gray-50'}`}
                                 >
-                                    {settings.system ? <FiBell /> : <FiBellOff />}
+                                    {settings.system ? <FiBell size={15} /> : <FiBellOff size={15} />}
                                 </button>
                                 <button
                                     onClick={() => updateSettings('sound', !settings.sound)}
-                                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${settings.sound ? 'text-blue-500 bg-blue-500/10' : 'text-gray-400 hover:bg-gray-50'}`}
+                                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${settings.sound ? 'text-blue-500 bg-blue-500/10' : 'text-gray-400 hover:bg-gray-50'}`}
                                 >
-                                    {settings.sound ? <FiVolume2 /> : <FiVolumeX />}
+                                    {settings.sound ? <FiVolume2 size={15} /> : <FiVolumeX size={15} />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <button
                                 onClick={() => setIsCloseDayModalOpen(true)}
-                                className="px-6 py-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white border border-red-200 transition-all font-black text-xs uppercase tracking-widest shadow-soft flex items-center gap-2"
+                                className="px-4 h-10 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white border border-red-200 transition-all font-black text-[11px] uppercase tracking-widest flex items-center gap-1.5"
                             >
-                                <FiTrash2 /> إغلاق يومي وتنزيل Excel
+                                <FiTrash2 size={14} /> إغلاق يومي وتنزيل Excel
                             </button>
 
-                            <div className="flex bg-white p-1.5 rounded-2xl border border-gray-100 shadow-inner">
+                            <div className="flex bg-white p-1 rounded-xl border border-gray-100">
                                 {[
-                                    { id: "active", icon: <FiClock />, label: t('admin.active_orders') },
-                                    { id: "history", icon: <FiArchive />, label: t('admin.history') || "الأرشيف" },
-                                    { id: "whatsapp", icon: <FiPackage />, label: t('admin.source_whatsapp') }
+                                    { id: "active", icon: <FiClock size={14} />, label: t('admin.active_orders') },
+                                    { id: "history", icon: <FiArchive size={14} />, label: t('admin.history') || "الأرشيف" },
+                                    { id: "whatsapp", icon: <FiPackage size={14} />, label: t('admin.source_whatsapp') }
                                 ].map((mode) => (
                                     <button
                                         key={mode.id}
                                         onClick={() => setViewMode(mode.id as any)}
-                                        className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${viewMode === mode.id
-                                            ? 'bg-primary text-white shadow-xl shadow-primary/20'
+                                        className={`px-3.5 h-9 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all ${viewMode === mode.id
+                                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
                                             : 'text-gray-400 hover:text-primary hover:bg-gray-50'
                                             }`}
                                     >
@@ -280,7 +280,7 @@ export default function AdminOrdersPage() {
                 </div>
 
                 {/* Dashboard Stats KPI Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
                     <StatCard icon={<FiDollarSign />} label={t('admin.total_revenue')} value={`${stats.overall.totalRevenue}₪`} type="primary" />
                     <StatCard icon={<FiShoppingBag />} label={t('admin.total_orders')} value={stats.overall.totalOrders} type="blue" />
                     <StatCard icon={<FiCheckCircle />} label={t('admin.paid_orders')} value={stats.overall.paidCount} type="emerald" />
@@ -291,7 +291,7 @@ export default function AdminOrdersPage() {
                 <AnimatePresence>
                     {showAnalytics && (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-soft">
+                            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-soft">
                                 <AnalyticsSection orders={orders} />
                             </div>
                         </motion.div>
@@ -299,15 +299,15 @@ export default function AdminOrdersPage() {
                 </AnimatePresence>
 
                 {/* Advanced Filter Management */}
-                <div className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-soft space-y-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center">
-                            <FiFilter size={20} />
+                <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-100 shadow-soft space-y-3">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center">
+                            <FiFilter size={15} />
                         </div>
-                        <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest">{t('admin.advanced_filters')}</h3>
+                        <h3 className="text-[13px] font-black text-gray-900 uppercase tracking-widest">{t('admin.advanced_filters')}</h3>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2.5">
                         <SearchInput value={searchTerm} onChange={setSearchTerm} t={t} isRtl={isRtl} />
                         <FilterSelect
                             icon={<FiCalendar />}
@@ -614,15 +614,15 @@ function StatCard({ icon, label, value, type }: StatCardProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`${s.bg} border ${s.border} p-8 rounded-[2.5rem] shadow-soft hover:shadow-premium transition-all duration-500 group`}
+            className={`${s.bg} border ${s.border} p-3.5 sm:p-4 rounded-2xl shadow-soft hover:shadow-premium transition-all duration-500 group`}
         >
-            <div className="flex items-center gap-6">
-                <div className={`w-16 h-16 rounded-3xl ${s.iconBg} ${s.iconText} flex items-center justify-center shadow-inner transition-transform group-hover:scale-110`}>
-                    <span className="text-2xl">{icon}</span>
+            <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${s.iconBg} ${s.iconText} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
+                    <span className="text-lg">{icon}</span>
                 </div>
-                <div className="flex flex-col">
-                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-1">{label}</span>
-                    <div className={`text-3xl font-black ${s.text} tracking-tight`}>{value}</div>
+                <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 mb-0.5 truncate">{label}</span>
+                    <div className={`text-xl sm:text-2xl font-black ${s.text} tracking-tight leading-none`}>{value}</div>
                 </div>
             </div>
         </motion.div>
@@ -632,13 +632,13 @@ function StatCard({ icon, label, value, type }: StatCardProps) {
 function SearchInput({ value, onChange, t, isRtl }: any) {
     return (
         <div className="relative group xl:col-span-1">
-            <FiSearch className={`absolute top-1/2 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-primary ${isRtl ? 'right-5' : 'left-5'}`} size={20} />
+            <FiSearch size={15} className={`absolute top-1/2 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-primary ${isRtl ? 'right-4' : 'left-4'}`} />
             <input
                 type="text"
                 placeholder={t('admin.search_placeholder')}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className={`w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-bold text-sm ${isRtl ? 'pr-14 pl-5 text-right' : 'pl-14 pr-5'}`}
+                className={`w-full h-11 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-bold text-[13px] ${isRtl ? 'pr-11 pl-3 text-right' : 'pl-11 pr-3'}`}
             />
         </div>
     );
@@ -647,13 +647,13 @@ function SearchInput({ value, onChange, t, isRtl }: any) {
 function FilterSelect({ icon, value, onChange, options, isRtl }: any) {
     return (
         <div className="relative">
-            <div className={`absolute top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none ${isRtl ? 'right-5' : 'left-5'}`}>
+            <div className={`absolute top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none ${isRtl ? 'right-4' : 'left-4'}`}>
                 {icon}
             </div>
             <select
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className={`w-full h-14 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-primary transition-all font-bold text-sm appearance-none relative ${isRtl ? 'pr-14 pl-6 text-right' : 'pl-14 pr-6'}`}
+                className={`w-full h-11 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:bg-white focus:border-primary transition-all font-bold text-[13px] appearance-none relative ${isRtl ? 'pr-11 pl-3 text-right' : 'pl-11 pr-3'}`}
             >
                 {options.map((opt: any) => <option key={opt.val} value={opt.val}>{opt.label}</option>)}
             </select>

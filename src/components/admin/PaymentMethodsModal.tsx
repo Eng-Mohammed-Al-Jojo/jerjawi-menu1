@@ -126,7 +126,7 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
+                <div className="admin-wrap fixed inset-0 z-100 flex items-end sm:items-center justify-center p-0 sm:p-5">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -136,93 +136,93 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                     />
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className={`relative w-full transition-all duration-500 bg-white rounded-[3rem] border border-gray-100 shadow-premium overflow-hidden z-10 flex flex-col max-h-[90vh] ${isGalleryOpen ? 'max-w-7xl' : 'max-w-5xl'}`}
+                        initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 40, scale: 0.98 }}
+                        className={`relative w-full transition-all duration-300 bg-white rounded-t-3xl sm:rounded-3xl border border-gray-100 shadow-premium overflow-hidden z-10 flex flex-col max-h-[92dvh] ${isGalleryOpen ? 'sm:max-w-3xl' : 'sm:max-w-2xl'}`}
                     >
-                        <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                            <div className="flex items-center gap-5">
-                                <div className="p-4 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20">
-                                    <FiSettings size={24} />
+                        <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/60 shrink-0">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="p-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 shrink-0">
+                                    <FiSettings size={17} />
                                 </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-gray-900 tracking-tight">{t('admin.manage_payment_methods')}</h2>
-                                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">{t('admin.payment_methods_config_desc')}</p>
+                                <div className="min-w-0">
+                                    <h2 className="text-[15px] sm:text-base font-black text-gray-900 tracking-tight truncate">{t('admin.manage_payment_methods')}</h2>
+                                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mt-0.5 truncate">{t('admin.payment_methods_config_desc')}</p>
                                 </div>
                             </div>
-                            <button onClick={onClose} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-all border border-gray-100 shadow-soft">
-                                <FiX size={24} />
+                            <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-all border border-gray-100 shrink-0">
+                                <FiX size={16} />
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-4 custom-scrollbar admin-dense-scroll">
                             <motion.div
                                 layout
-                                className="mb-8 p-6 rounded-3xl bg-primary/5 border border-primary/10 flex items-center justify-between gap-5"
+                                className="mb-3.5 p-3.5 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between gap-2"
                             >
-                                <div>
-                                    <h3 className="text-base font-black text-gray-900">{t('admin.enable_payment_screen')}</h3>
-                                    <p className="text-xs font-bold text-gray-400 mt-1">{enabled ? t('admin.payment_screen_enabled') : t('admin.payment_screen_disabled')}</p>
+                                <div className="min-w-0">
+                                    <h3 className="text-[13px] font-black text-gray-900 truncate">{t('admin.enable_payment_screen')}</h3>
+                                    <p className="text-[11px] font-bold text-gray-400 mt-0.5 truncate">{enabled ? t('admin.payment_screen_enabled') : t('admin.payment_screen_disabled')}</p>
                                 </div>
                                 <button
                                     onClick={handleToggleEnabled}
-                                    className={`relative w-16 h-8 rounded-full transition-all duration-300 border ${enabled ? "bg-emerald-500 border-emerald-600" : "bg-gray-200 border-gray-300"}`}
+                                    className={`relative w-12 h-[26px] rounded-full transition-all duration-300 border shrink-0 ${enabled ? "bg-emerald-500 border-emerald-600" : "bg-gray-200 border-gray-300"}`}
                                 >
-                                    <motion.span animate={{ x: enabled ? 36 : 4 }} className="absolute top-1 left-0 w-6 h-6 rounded-full bg-white shadow-md" />
+                                    <motion.span animate={{ x: enabled ? 24 : 2 }} className="absolute top-[3px] left-0 w-[18px] h-[18px] rounded-full bg-white shadow-md" />
                                 </button>
                             </motion.div>
 
-                            <div className={`grid grid-cols-1 ${isGalleryOpen ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-10 transition-all duration-500`}>
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-3">
-                                            <FiList size={18} /> {t('admin.payment_methods_title')}
+                            <div className={`grid grid-cols-1 ${isGalleryOpen ? 'lg:grid-cols-2' : 'lg:grid-cols-2'} gap-4 transition-all duration-300`}>
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.14em] flex items-center gap-1.5">
+                                            <FiList size={14} /> {t('admin.payment_methods_title')}
                                         </h3>
                                         <button
                                             onClick={() => setEditingMethod(emptyMethod(methods.length + 1))}
-                                            className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+                                            className="admin-btn px-3.5 h-9 bg-primary text-white rounded-lg text-[11px] font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-1.5"
                                         >
-                                            <FiPlus /> {t('admin.add_payment_method')}
+                                            <FiPlus size={13} /> {t('admin.add_payment_method')}
                                         </button>
                                     </div>
 
                                     {loading ? (
-                                        <div className="space-y-4">
+                                        <div className="space-y-2.5">
                                             {[0, 1, 2].map((item) => (
-                                                <div key={item} className="h-24 rounded-3xl bg-gray-50 border border-gray-100 animate-pulse" />
+                                                <div key={item} className="h-16 rounded-2xl bg-gray-50 border border-gray-100 animate-pulse" />
                                             ))}
                                         </div>
                                     ) : methods.length === 0 ? (
-                                        <div className="py-24 text-center bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-200">
-                                            <FiSettings className="mx-auto text-gray-200 mb-6" size={48} />
-                                            <p className="text-gray-400 font-black text-sm uppercase tracking-widest">{t('admin.no_payment_methods')}</p>
+                                        <div className="py-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                                            <FiSettings className="mx-auto text-gray-200 mb-3" size={32} />
+                                            <p className="text-gray-400 font-black text-xs uppercase tracking-widest">{t('admin.no_payment_methods')}</p>
                                         </div>
                                     ) : (
-                                        <div className="grid gap-4">
+                                        <div className="grid gap-2.5">
                                             {methods.map((method) => (
                                                 <div
                                                     key={method.id}
                                                     onClick={() => setEditingMethod(method)}
-                                                    className={`p-6 rounded-3xl border transition-all flex items-center justify-between cursor-pointer group ${editingMethod?.id === method.id ? 'bg-white border-primary shadow-premium' : 'bg-gray-50 border-gray-100 hover:bg-white hover:border-primary/20'} ${!method.isEnabled ? 'opacity-45' : ''}`}
+                                                    className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-2 cursor-pointer group ${editingMethod?.id === method.id ? 'bg-white border-primary shadow-soft' : 'bg-gray-50 border-gray-100 hover:bg-white hover:border-primary/20'} ${!method.isEnabled ? 'opacity-50' : ''}`}
                                                 >
-                                                    <div className="flex items-center gap-5 min-w-0">
-                                                        <div className="w-14 h-14 rounded-2xl bg-white border border-gray-100 flex items-center justify-center shrink-0 shadow-soft text-primary">
+                                                    <div className="flex items-center gap-2.5 min-w-0">
+                                                        <div className="w-11 h-11 rounded-xl bg-white border border-gray-100 flex items-center justify-center shrink-0 text-primary">
                                                             {method.imageUrl ? (
-                                                                <img src={method.imageUrl} alt="" className="w-10 h-10 object-contain" />
+                                                                <img src={method.imageUrl} alt="" className="w-8 h-8 object-contain" />
                                                             ) : (
-                                                                <FiEdit3 size={22} />
+                                                                <FiEdit3 size={17} />
                                                             )}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="font-black text-gray-900 text-lg leading-none truncate">{method.name || method.label}</p>
-                                                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                            <p className="font-black text-gray-900 text-[13px] leading-tight truncate">{method.name || method.label}</p>
+                                                            <div className="flex flex-wrap items-center gap-1.5 mt-1">
                                                                 {!method.isEnabled && (
-                                                                    <span className="text-[9px] font-black uppercase px-2.5 py-1 rounded-lg border bg-rose-50 text-rose-600 border-rose-100">
+                                                                    <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-100">
                                                                         معطّلة
                                                                     </span>
                                                                 )}
-                                                                <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-lg border ${method.showPaymentDetails ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+                                                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${method.showPaymentDetails ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
                                                                     {method.showPaymentDetails ? "يعرض تفاصيل الدفع" : "يتخطى الدفع"}
                                                                 </span>
                                                                 <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest">{t(`admin.payment_type_${method.type}`)}</span>
@@ -230,32 +230,32 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
-                                                        <div className="flex flex-col gap-2 items-end">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">تفاصيل الدفع</span>
+                                                    <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                                                        <div className="flex flex-col gap-1.5 items-end">
+                                                            <div className="flex items-center gap-1.5">
+                                                                <span className="text-[9px] font-black text-gray-400 uppercase">تفاصيل الدفع</span>
                                                                 <button
                                                                     onClick={() => toggleShowPaymentDetails(method)}
-                                                                    className={`w-10 h-6 rounded-full transition-all relative border ${method.showPaymentDetails ? 'bg-emerald-500 border-emerald-600' : 'bg-gray-200 border-gray-300'}`}
+                                                                    className={`w-9 h-[22px] rounded-full transition-all relative border ${method.showPaymentDetails ? 'bg-emerald-500 border-emerald-600' : 'bg-gray-200 border-gray-300'}`}
                                                                 >
-                                                                    <motion.span animate={{ x: method.showPaymentDetails ? 20 : 4 }} className="absolute top-1 left-0 w-3.5 h-3.5 rounded-full bg-white shadow-sm" />
+                                                                    <motion.span animate={{ x: method.showPaymentDetails ? 16 : 2 }} className="absolute top-[2px] left-0 w-4 h-4 rounded-full bg-white shadow-sm" />
                                                                 </button>
                                                             </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">مفعّلة</span>
+                                                            <div className="flex items-center gap-1.5">
+                                                                <span className="text-[9px] font-black text-gray-400 uppercase">مفعّلة</span>
                                                                 <button
                                                                     onClick={() => toggleEnabled(method)}
-                                                                    className={`w-10 h-6 rounded-full transition-all relative border ${method.isEnabled ? 'bg-emerald-500 border-emerald-600' : 'bg-gray-200 border-gray-300'}`}
+                                                                    className={`w-9 h-[22px] rounded-full transition-all relative border ${method.isEnabled ? 'bg-emerald-500 border-emerald-600' : 'bg-gray-200 border-gray-300'}`}
                                                                 >
-                                                                    <motion.span animate={{ x: method.isEnabled ? 20 : 4 }} className="absolute top-1 left-0 w-3.5 h-3.5 rounded-full bg-white shadow-sm" />
+                                                                    <motion.span animate={{ x: method.isEnabled ? 16 : 2 }} className="absolute top-[2px] left-0 w-4 h-4 rounded-full bg-white shadow-sm" />
                                                                 </button>
                                                             </div>
                                                         </div>
                                                         <button
                                                             onClick={() => handleDelete(method.id)}
-                                                            className="w-10 h-10 rounded-xl bg-gray-50 text-gray-400 hover:bg-secondary/10 hover:text-secondary border border-gray-100 transition-all flex items-center justify-center shadow-sm"
+                                                            className="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 hover:bg-secondary/10 hover:text-secondary border border-gray-100 transition-all flex items-center justify-center"
                                                         >
-                                                            <FiTrash2 size={18} />
+                                                            <FiTrash2 size={15} />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -264,7 +264,7 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                     )}
                                 </div>
 
-                                <div className="bg-gray-50 p-6 md:p-10 rounded-[3rem] border border-gray-100 h-fit sticky top-0 shadow-inner">
+                                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 h-fit sm:sticky sm:top-0">
                                     <AnimatePresence mode="wait">
                                         {editingMethod ? (
                                             <motion.div
@@ -272,22 +272,22 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                 initial={{ opacity: 0, scale: 0.95 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 exit={{ opacity: 0, scale: 0.95 }}
-                                                className="space-y-8"
+                                                className="space-y-3.5"
                                             >
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <h3 className="text-xl font-black text-gray-900 tracking-tight">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <h3 className="text-[15px] font-black text-gray-900 tracking-tight">
                                                         {editingMethod.id ? t('admin.edit_payment_method') : t('admin.add_payment_method')}
                                                     </h3>
-                                                    <button onClick={() => setEditingMethod(null)} className="w-10 h-10 rounded-xl bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 border border-gray-100 transition-all flex items-center justify-center shadow-soft">
-                                                        <FiX />
+                                                    <button onClick={() => setEditingMethod(null)} className="w-8 h-8 rounded-lg bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 border border-gray-100 transition-all flex items-center justify-center">
+                                                        <FiX size={14} />
                                                     </button>
                                                 </div>
 
-                                                <div className="space-y-6">
+                                                <div className="space-y-3">
                                                     <div>
-                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] block mb-3 px-1">شعار وسيلة الدفع</label>
-                                                        <div className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-3xl shadow-soft">
-                                                            <div className="w-[52px] h-[52px] rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0">
+                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.14em] block mb-1.5 px-0.5">شعار وسيلة الدفع</label>
+                                                        <div className="flex items-center gap-2.5 p-2.5 bg-white border border-gray-100 rounded-2xl">
+                                                            <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0">
                                                                 {editingMethod.imageUrl ? (
                                                                     <img src={editingMethod.imageUrl} alt="" className="w-full h-full object-contain p-1" />
                                                                 ) : (
@@ -319,23 +319,23 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                     </div>
 
                                                     <div>
-                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] block mb-3 px-1">{t('admin.method_label')}</label>
+                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.14em] block mb-1.5 px-0.5">{t('admin.method_label')}</label>
                                                         <input
                                                             value={editingMethod.name || editingMethod.label || ""}
                                                             onChange={(e) => setEditingMethod({ ...editingMethod, name: e.target.value })}
-                                                            className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all shadow-soft"
+                                                            className="w-full bg-white border border-gray-100 rounded-xl h-11 px-4 text-[13px] font-bold outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                                             placeholder={t('admin.method_label')}
                                                         />
                                                     </div>
 
                                                     <div>
-                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] block mb-3 px-1">{t('admin.payment_type')}</label>
-                                                        <div className="grid grid-cols-3 gap-3">
+                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.14em] block mb-1.5 px-0.5">{t('admin.payment_type')}</label>
+                                                        <div className="grid grid-cols-3 gap-2">
                                                             {(["cash", "bank", "wallet"] as const).map((type) => (
                                                                 <button
                                                                     key={type}
                                                                     onClick={() => setEditingMethod({ ...editingMethod, type })}
-                                                                    className={`py-4 rounded-2xl border transition-all text-xs font-black uppercase tracking-widest ${editingMethod.type === type ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'bg-white text-gray-400 border-gray-100 hover:border-primary/30'}`}
+                                                                    className={`h-11 rounded-xl border transition-all text-[11px] font-black uppercase tracking-widest ${editingMethod.type === type ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'bg-white text-gray-400 border-gray-100 hover:border-primary/30'}`}
                                                                 >
                                                                     {t(`admin.payment_type_${type}`)}
                                                                 </button>
@@ -344,29 +344,29 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                     </div>
 
                                                     <div>
-                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] block mb-3 px-1">{t('admin.method_details')}</label>
+                                                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.14em] block mb-1.5 px-0.5">{t('admin.method_details')}</label>
                                                         <textarea
-                                                            rows={5}
+                                                            rows={4}
                                                             value={editingMethod.details || ""}
                                                             onChange={(e) => setEditingMethod({ ...editingMethod, details: e.target.value })}
-                                                            className="w-full bg-white border border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all shadow-soft resize-none"
+                                                            className="w-full bg-white border border-gray-100 rounded-xl py-3 px-4 text-[13px] font-bold outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none"
                                                             placeholder={t('admin.method_details_placeholder')}
                                                         />
                                                     </div>
 
-                                                    <div className="flex flex-wrap items-center gap-3">
+                                                    <div className="flex flex-wrap items-center gap-2">
                                                         <button
                                                             onClick={() => setEditingMethod({ ...editingMethod, isEnabled: !editingMethod.isEnabled })}
-                                                            className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm ${editingMethod.isEnabled ? 'bg-emerald-500 text-white border border-emerald-600' : 'bg-white text-secondary border border-gray-100'}`}
+                                                            className={`flex items-center gap-1.5 px-4 h-9 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${editingMethod.isEnabled ? 'bg-emerald-500 text-white border border-emerald-600' : 'bg-white text-secondary border border-gray-100'}`}
                                                         >
-                                                            {editingMethod.isEnabled ? <FiCheck /> : <FiX />}
+                                                            {editingMethod.isEnabled ? <FiCheck size={13} /> : <FiX size={13} />}
                                                             {t('admin.active_status')}
                                                         </button>
                                                         <button
                                                             onClick={() => setEditingMethod({ ...editingMethod, showPaymentDetails: !editingMethod.showPaymentDetails })}
-                                                            className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm ${editingMethod.showPaymentDetails ? 'bg-blue-500 text-white border border-blue-600' : 'bg-white text-blue-600 border border-gray-100'}`}
+                                                            className={`flex items-center gap-1.5 px-4 h-9 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${editingMethod.showPaymentDetails ? 'bg-blue-500 text-white border border-blue-600' : 'bg-white text-blue-600 border border-gray-100'}`}
                                                         >
-                                                            {editingMethod.showPaymentDetails ? <FiCheck /> : <FiX />}
+                                                            {editingMethod.showPaymentDetails ? <FiCheck size={13} /> : <FiX size={13} />}
                                                             تفاصيل الدفع
                                                         </button>
                                                     </div>
@@ -374,9 +374,9 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
 
                                                 <button
                                                     onClick={handleSave}
-                                                    className="w-full py-5 bg-primary text-white rounded-2xl font-black shadow-xl shadow-primary/20 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all text-sm uppercase tracking-widest"
+                                                    className="admin-btn w-full h-11 bg-primary text-white rounded-xl font-black shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-95 transition-all text-[13px] uppercase tracking-widest"
                                                 >
-                                                    <FiSave size={20} /> {t('common.save')}
+                                                    <FiSave size={16} /> {t('common.save')}
                                                 </button>
                                             </motion.div>
                                         ) : (
@@ -384,14 +384,14 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                 key="empty"
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
-                                                className="h-[420px] flex flex-col items-center justify-center text-center p-10 space-y-6"
+                                                className="min-h-[220px] flex flex-col items-center justify-center text-center p-6 space-y-3"
                                             >
-                                                <div className="w-24 h-24 rounded-4xl bg-white shadow-soft flex items-center justify-center text-primary/10 border border-gray-50">
-                                                    <FiSettings size={48} />
+                                                <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-primary/10 border border-gray-50">
+                                                    <FiSettings size={28} />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-black text-gray-900 text-lg mb-2">{t('admin.payment_editor_title')}</h4>
-                                                    <p className="text-xs text-gray-400 font-bold max-w-[240px] leading-relaxed uppercase tracking-widest">{t('admin.payment_editor_desc')}</p>
+                                                    <h4 className="font-black text-gray-900 text-[15px] mb-1">{t('admin.payment_editor_title')}</h4>
+                                                    <p className="text-[11px] text-gray-400 font-bold max-w-[240px] leading-relaxed uppercase tracking-widest">{t('admin.payment_editor_desc')}</p>
                                                 </div>
                                             </motion.div>
                                         )}
@@ -401,18 +401,18 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                 <AnimatePresence>
                                     {isGalleryOpen && (
                                         <motion.div
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: 20 }}
-                                            className="bg-white p-6 rounded-[3rem] border border-gray-100 shadow-premium flex flex-col h-full overflow-hidden"
+                                            initial={{ opacity: 0, y: 12 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 12 }}
+                                            className="bg-white p-4 rounded-2xl border border-gray-100 shadow-soft flex flex-col overflow-hidden"
                                         >
-                                            <div className="flex items-center justify-between mb-6">
-                                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">معرض الصور</h3>
-                                                <button onClick={() => setIsGalleryOpen(false)} className="text-gray-400 hover:text-rose-500 transition-colors">
-                                                    <FiX size={20} />
+                                            <div className="flex items-center justify-between mb-3">
+                                                <h3 className="text-[13px] font-black text-gray-900 uppercase tracking-widest">معرض الصور</h3>
+                                                <button onClick={() => setIsGalleryOpen(false)} className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
+                                                    <FiX size={15} />
                                                 </button>
                                             </div>
-                                            <div className="grid grid-cols-4 gap-3 overflow-y-auto custom-scrollbar p-1">
+                                            <div className="grid grid-cols-4 gap-2 overflow-y-auto custom-scrollbar p-0.5 max-h-56">
                                                 {galleryImages.map((url, i) => {
                                                     const filename = url.split('/').pop() || "";
                                                     return (
@@ -423,9 +423,9 @@ export default function PaymentMethodsModal({ isOpen, onClose }: Props) {
                                                                 // Don't close on mobile? User said "closes the gallery"
                                                                 setIsGalleryOpen(false);
                                                             }}
-                                                            className={`flex flex-col items-center gap-2 p-2 rounded-2xl border transition-all hover:bg-primary/5 ${editingMethod?.imageUrl === url ? 'bg-primary/10 border-primary ring-2 ring-primary/10' : 'bg-gray-50 border-gray-100'}`}
+                                                            className={`flex flex-col items-center gap-1.5 p-1.5 rounded-xl border transition-all hover:bg-primary/5 ${editingMethod?.imageUrl === url ? 'bg-primary/10 border-primary ring-2 ring-primary/10' : 'bg-gray-50 border-gray-100'}`}
                                                         >
-                                                            <div className="w-full aspect-square bg-white rounded-xl overflow-hidden flex items-center justify-center p-1 shadow-soft">
+                                                            <div className="w-full aspect-square bg-white rounded-lg overflow-hidden flex items-center justify-center p-1">
                                                                 <img src={url} alt="" className="w-full h-full object-contain" />
                                                             </div>
                                                             <span className="text-[8px] font-black text-gray-500 uppercase truncate w-full text-center">{filename}</span>

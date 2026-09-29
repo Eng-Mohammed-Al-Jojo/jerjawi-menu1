@@ -51,7 +51,7 @@ export default function GlassButton({ onClick, icon, label, variant = "primary",
       className={`
         relative overflow-hidden
         flex items-center justify-center gap-2
-        w-12 h-12 rounded-2xl sm:rounded-2xl
+        w-10 h-10 rounded-xl
         backdrop-blur-xl border
         transition-all duration-300
         ${variants[variant]}

@@ -212,3 +212,65 @@ body {
 .swiper-button-prev:after {
   font-size: 18px !important;
 }
+
+/* ==========================================================
+   ADMIN — Mobile-first compact density system
+   Base = mobile (compact). sm+ scales up slightly.
+   ========================================================== */
+:root {
+  --admin-radius: 14px;
+  --admin-radius-lg: 18px;
+  --admin-input-h: 2.75rem; /* 44px mobile */
+  --admin-text-base: 0.8125rem; /* 13px */
+}
+
+@media (min-width: 640px) {
+  :root {
+    --admin-radius: 16px;
+    --admin-radius-lg: 22px;
+    --admin-input-h: 3rem;
+    --admin-text-base: 0.875rem;
+  }
+}
+
+.admin-wrap {
+  font-size: var(--admin-text-base);
+  -webkit-text-size-adjust: 100%;
+}
+
+.admin-wrap input,
+.admin-wrap select,
+.admin-wrap textarea {
+  font-size: 13px;
+}
+
+@media (min-width: 640px) {
+  .admin-wrap input,
+  .admin-wrap select,
+  .admin-wrap textarea {
+    font-size: 14px;
+  }
+}
+
+/* Compact touch targets on mobile, comfortable on desktop */
+.admin-btn {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 640px) {
+  .admin-btn {
+    min-height: 3rem;
+  }
+}
+
+/* Prevent iOS zoom on inputs + tighter line-height for admin */
+.admin-wrap input,
+.admin-wrap select {
+  line-height: 1.4;
+}
+
+/* Dense scroll areas */
+.admin-dense-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}

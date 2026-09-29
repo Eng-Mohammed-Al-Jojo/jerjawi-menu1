@@ -84,7 +84,7 @@ const FeaturedGallery: React.FC<Props> = ({
     return (
         <AnimatePresence>
             {visible && (
-                <div className="fixed inset-0 z-200 flex items-center justify-center p-6">
+                <div className="fixed inset-0 z-200 flex items-end sm:items-center justify-center p-0 sm:p-5">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -99,48 +99,48 @@ const FeaturedGallery: React.FC<Props> = ({
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative bg-white w-full max-w-4xl rounded-[3rem] border border-gray-100 shadow-premium flex flex-col max-h-[90vh] overflow-hidden z-10"
+                        className="relative bg-white w-full sm:max-w-2xl rounded-3xl border border-gray-100 shadow-premium flex flex-col max-h-[90dvh] overflow-hidden z-10"
                     >
                         {/* Header */}
-                        <div className="p-8 border-b border-gray-100 bg-gray-50/50 space-y-6">
+                        <div className="p-4 border-b border-gray-100 bg-gray-50/60 space-y-3">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-5">
-                                    <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center text-2xl shadow-xl shadow-primary/20">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-lg shadow-lg shadow-primary/20">
                                         <FiImage />
                                     </div>
                                     <div>
-                                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">{title || t('admin.gallery_title')}</h2>
-                                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">{t('admin.select_image_desc')}</p>
+                                        <h2 className="text-[15px] sm:text-base font-black text-gray-900 tracking-tight">{title || t('admin.gallery_title')}</h2>
+                                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mt-0.5">{t('admin.select_image_desc')}</p>
                                     </div>
                                 </div>
-                                <button onClick={onClose} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-all border border-gray-100 shadow-soft">
-                                    <FiX size={24} />
+                                <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl bg-white text-gray-400 hover:text-secondary hover:bg-secondary/10 transition-all border border-gray-100">
+                                    <FiX size={16} />
                                 </button>
                             </div>
 
                             {/* Search Input */}
                             <div className="relative group">
-                                <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" size={20} />
+                                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" size={15} />
                                 <input
                                     type="text"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder={t('common.search') || "Search images..."}
-                                    className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all shadow-soft"
+                                    className="w-full bg-white border border-gray-100 rounded-xl h-11 pl-11 pr-10 text-[13px] font-bold outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                                 />
                                 {searchTerm && (
                                     <button
                                         onClick={() => setSearchTerm("")}
-                                        className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-secondary transition-colors"
+                                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-secondary transition-colors"
                                     >
-                                        <FiX size={18} />
+                                        <FiX size={14} />
                                     </button>
                                 )}
                             </div>
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-8 scroll-smooth custom-scrollbar bg-gray-50/30">
+                        <div className="flex-1 overflow-y-auto p-3 sm:p-4 scroll-smooth custom-scrollbar admin-dense-scroll bg-gray-50/30">
                             {loading ? (
                                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                                     <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -149,7 +149,7 @@ const FeaturedGallery: React.FC<Props> = ({
                             ) : (
                                 <motion.div
                                     layout
-                                    className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6"
+                                    className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5"
                                 >
                                     <AnimatePresence mode="popLayout">
                                         {filteredImages.map((img) => {
@@ -164,7 +164,7 @@ const FeaturedGallery: React.FC<Props> = ({
                                                     key={img}
                                                     type="button"
                                                     onClick={() => handleSelect(img)}
-                                                    className={`group relative rounded-4xl overflow-hidden border-2 transition-all duration-300 aspect-square shadow-soft
+                                                    className={`group relative rounded-2xl overflow-hidden border-2 transition-all duration-300 aspect-square
                                                         ${isSelected ? "border-primary ring-4 ring-primary/10" : "border-white hover:border-primary/50 hover:shadow-premium"}`}
                                                 >
                                                     <SafeImage
@@ -202,7 +202,7 @@ const FeaturedGallery: React.FC<Props> = ({
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="py-24 text-center space-y-6"
+                                    className="py-12 text-center space-y-4"
                                 >
                                     <div className="w-20 h-20 bg-white text-gray-200 rounded-4xl flex items-center justify-center mx-auto text-3xl shadow-soft border border-gray-100">
                                         <FiSearch size={32} />
@@ -216,11 +216,11 @@ const FeaturedGallery: React.FC<Props> = ({
                         </div>
 
                         {/* Footer */}
-                        <div className="p-8 border-t border-gray-100 bg-gray-50/50">
+                        <div className="p-3.5 border-t border-gray-100 bg-gray-50/60">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="w-full py-5 rounded-2xl bg-white text-gray-400 font-black border border-gray-100 hover:text-secondary hover:bg-secondary/5 transition-all shadow-soft uppercase tracking-widest text-xs"
+                                className="admin-btn w-full h-11 rounded-xl bg-white text-gray-400 font-black border border-gray-100 hover:text-secondary hover:bg-secondary/5 transition-all text-[13px] uppercase tracking-widest"
                             >
                                 {t('admin.close_gallery')}
                             </button>

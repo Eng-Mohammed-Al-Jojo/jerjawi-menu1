@@ -212,25 +212,25 @@ export default function Menu({ onLoadingChange, onFeaturedCheck, onFeaturedItems
       >
         <div className="flex flex-col">
           {/* Header Area */}
-          <div className="flex flex-col mb-8 gap-6">
+          <div className="flex flex-col mb-4 sm:mb-5 gap-3">
             {/* Search Bar */}
-            <div className="w-full max-w-2xl mx-auto relative group">
-              <div className="absolute right-5 top-1/2 -translate-y-1/2 text-(--menu-text-muted) group-focus-within:text-(--menu-primary) transition-colors">
-                <FiSearch size={22} />
+            <div className="w-full max-w-xl mx-auto relative group">
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-(--menu-text-muted) group-focus-within:text-(--menu-primary) transition-colors">
+                <FiSearch size={16} />
               </div>
               <input
                 type="text"
                 placeholder={t('common.search') || "ابحث عن طبقك المفضل..."}
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="w-full bg-(--menu-card-elevated) border border-(--menu-border) rounded-2xl py-4 pr-14 pl-6 text-[15px] font-medium focus:bg-(--menu-card-elevated) focus:border-(--menu-primary) focus:ring-4 focus:ring-[color-mix(in_srgb,var(--menu-primary)_14%,transparent)] outline-none transition-all shadow-soft text-right text-(--menu-text)"
+                className="w-full h-11 bg-(--menu-card-elevated) border border-(--menu-border) rounded-xl pr-11 pl-10 text-[13px] font-bold focus:bg-(--menu-card-elevated) focus:border-(--menu-primary) focus:ring-2 focus:ring-[color-mix(in_srgb,var(--menu-primary)_14%,transparent)] outline-none transition-all shadow-soft text-right text-(--menu-text) placeholder:font-medium placeholder:opacity-60"
               />
               {searchTerm && (
                 <button
                   onClick={handleSearchClear}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-xl bg-(--menu-card-bg) flex items-center justify-center text-(--menu-text-muted) hover:text-(--menu-text) transition-colors"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-(--menu-card-bg) flex items-center justify-center text-(--menu-text-muted) hover:text-(--menu-text) transition-colors"
                 >
-                  <FiX size={16} />
+                  <FiX size={14} />
                 </button>
               )}
             </div>
@@ -308,9 +308,9 @@ export default function Menu({ onLoadingChange, onFeaturedCheck, onFeaturedItems
         {/* Floating Components */}
         <button
           onClick={() => setShowFeedbackModal(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-(--menu-primary) text-(--menu-card-elevated) rounded-2xl shadow-premium flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-transform"
+          className="fixed bottom-4 right-4 w-11 h-11 bg-(--menu-primary) text-(--menu-card-elevated) rounded-xl shadow-premium flex items-center justify-center z-40 hover:scale-105 active:scale-95 transition-transform"
         >
-          <FaCommentDots size={24} />
+          <FaCommentDots size={18} />
         </button>
 
         <FeedbackModal show={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} orderSystem={orderSystem} />

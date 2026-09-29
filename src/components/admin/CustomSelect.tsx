@@ -36,16 +36,16 @@ const CustomSelect: React.FC<Props> = ({ options, value, onChange, error, placeh
                 onClick={() => !disabled && setOpen(!open)}
                 disabled={disabled}
                 className={`
-                    w-full flex items-center justify-between px-6 py-4 rounded-2xl border transition-all duration-500
-                    bg-gray-50 outline-none shadow-soft
+                    w-full flex items-center justify-between px-4 h-11 rounded-xl border transition-all duration-300
+                    bg-gray-50 outline-none
                     ${disabled ? "opacity-50 cursor-not-allowed border-gray-100" : "hover:border-primary/30 hover:bg-white"}
-                    ${error ? "border-secondary ring-4 ring-secondary/5" : (!disabled ? "border-gray-100 focus:border-primary focus:ring-4 focus:ring-primary/5 focus:bg-white" : "")} 
+                    ${error ? "border-secondary ring-2 ring-secondary/10" : (!disabled ? "border-gray-100 focus:border-primary focus:ring-2 focus:ring-primary/10 focus:bg-white" : "")} 
                 `}
             >
-                <span className={`text-sm font-bold ${selectedOption ? "text-gray-900" : "text-gray-400"}`}>
+                <span className={`text-[13px] font-bold truncate ${selectedOption ? "text-gray-900" : "text-gray-400"}`}>
                     {selectedOption ? selectedOption.name : placeholder || t('common.select')}
                 </span>
-                <FiChevronDown className={`transition-transform duration-500 text-gray-400 ${open ? "rotate-180 text-primary" : ""}`} size={20} />
+                <FiChevronDown className={`transition-transform duration-300 text-gray-400 shrink-0 ${open ? "rotate-180 text-primary" : ""}`} size={16} />
             </button>
 
             <AnimatePresence>

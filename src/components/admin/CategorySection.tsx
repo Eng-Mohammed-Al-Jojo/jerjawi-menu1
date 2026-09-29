@@ -87,13 +87,13 @@ const CategoryCard: React.FC<{
         {...attributes}
         layout
         className={`
-          relative group flex flex-col bg-white rounded-4xl border transition-all duration-300 overflow-hidden h-full
+          relative group flex flex-col bg-white rounded-2xl border transition-all duration-300 overflow-hidden h-full
           ${isDragging ? "z-50 border-primary shadow-premium scale-[1.02]" : "border-gray-100 hover:border-primary/20 shadow-soft hover:shadow-premium"}
           ${!cat.visible ? "opacity-60 grayscale-[0.5]" : ""}
         `}
       >
         {/* Category Image Header */}
-        <div className="relative h-44 bg-gray-50 overflow-hidden group/img">
+        <div className="relative h-28 sm:h-32 bg-gray-50 overflow-hidden group/img">
           {cat.image ? (
             <SafeImage
               src={cat.image.startsWith('http') || cat.image.startsWith('/') ? cat.image : getAssetUrl(`images/${cat.image}`)}
@@ -152,63 +152,63 @@ const CategoryCard: React.FC<{
         </div>
 
         {/* Card Content */}
-        <div className="p-6 flex flex-col flex-1">
-          <div className="flex-1 min-w-0 mb-6">
+        <div className="p-3.5 sm:p-4 flex flex-col flex-1">
+          <div className="flex-1 min-w-0 mb-3">
             {editingId === cat.id ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <input
                   autoFocus
-                  className="flex-1 p-3 bg-gray-50 border border-primary rounded-xl text-sm font-bold outline-none text-right focus:bg-white transition-all"
+                  className="flex-1 min-w-0 p-2.5 bg-gray-50 border border-primary rounded-lg text-[13px] font-bold outline-none text-right focus:bg-white transition-all"
                   value={editNameAr}
                   onChange={(e) => setEditNameAr(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && saveEdit(cat.id)}
                 />
                 <button
                   onClick={() => saveEdit(cat.id)}
-                  className="w-11 h-11 flex items-center justify-center rounded-xl bg-emerald-500 text-white shrink-0 shadow-lg shadow-emerald-500/20"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg bg-emerald-500 text-white shrink-0 shadow-lg shadow-emerald-500/20"
                 >
-                  <FiCheck />
+                  <FiCheck size={15} />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="text-lg font-bold text-gray-900 truncate" title={cat.nameAr}>
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-[15px] font-bold text-gray-900 truncate" title={cat.nameAr}>
                   {cat.nameAr}
                 </h3>
                 <button
                   onClick={() => startEditing(cat.id, cat.nameAr)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
+                  className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-primary transition-colors shrink-0"
                 >
-                  <FiEdit size={14} />
+                  <FiEdit size={13} />
                 </button>
               </div>
             )}
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-1.5 mt-1">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                 {catSubcategories.length} {t('admin.subcategories')}
               </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3 pt-6 border-t border-gray-50">
+          <div className="flex items-center gap-2 pt-3 border-t border-gray-50">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className={`flex-1 h-12 flex items-center justify-center gap-3 rounded-xl transition-all font-bold border ${isExpanded
+              className={`flex-1 h-10 flex items-center justify-center gap-2 rounded-lg transition-all font-bold border text-xs ${isExpanded
                 ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
                 : "bg-gray-50 text-gray-500 border-gray-100 hover:bg-white hover:border-primary/30 hover:text-primary"
                 }`}
             >
-              <span className="text-xs uppercase tracking-wider">{t('admin.subcategories')}</span>
-              <FiChevronDown className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} />
+              <span className="text-[11px] uppercase tracking-wider">{t('admin.subcategories')}</span>
+              <FiChevronDown size={14} className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} />
             </button>
 
             <button
               onClick={() => setPopup({ type: "deleteCategory", id: cat.id })}
-              className="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary-50 text-secondary hover:bg-secondary hover:text-white transition-all border border-secondary-100 shadow-sm active:scale-95"
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-secondary-50 text-secondary hover:bg-secondary hover:text-white transition-all border border-secondary-100 active:scale-95 shrink-0"
             >
-              <FiTrash2 size={18} />
+              <FiTrash2 size={15} />
             </button>
           </div>
         </div>
@@ -222,28 +222,28 @@ const CategoryCard: React.FC<{
               exit={{ height: 0, opacity: 0 }}
               className="bg-gray-50/50 border-t border-gray-50"
             >
-              <div className="p-5 space-y-4">
-                <div className="flex items-center justify-between mb-2 px-1">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">{t('admin.manage_sub')}</span>
+              <div className="p-3 space-y-2.5">
+                <div className="flex items-center justify-between mb-1 px-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">{t('admin.manage_sub')}</span>
                   <button
                     onClick={() => setPopup({ type: "addSubcategory", parentId: cat.id })}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary text-white text-[10px] font-bold hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-primary text-white text-[11px] font-bold hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
                   >
                     <FiPlus size={12} /> {t('admin.add_new')}
                   </button>
                 </div>
 
                 {catSubcategories.length > 0 ? (
-                  <div className="flex flex-col gap-2.5">
+                  <div className="flex flex-col gap-2">
                     {catSubcategories.map(([id, sub]) => (
                       <div
                         key={id}
-                        className={`flex items-center justify-between p-3 bg-white border border-gray-100 rounded-2xl shadow-sm transition-all hover:border-primary/20 ${!sub.visible ? "opacity-60" : ""}`}
+                        className={`flex items-center justify-between p-2 bg-white border border-gray-100 rounded-xl shadow-sm transition-all hover:border-primary/20 ${!sub.visible ? "opacity-60" : ""}`}
                       >
-                        <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0">
                           <button
                             onClick={() => setPopup({ type: "subcategoryImage", id })}
-                            className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0 group/sub"
+                            className="w-9 h-9 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0 group/sub"
                           >
                             {sub.image ? (
                               <SafeImage src={sub.image.startsWith('http') || sub.image.startsWith('/') ? sub.image : getAssetUrl(`images/${sub.image}`)} alt="" className="w-full h-full object-cover transition-transform group-hover/sub:scale-110" />
@@ -358,26 +358,26 @@ const CategorySection: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white p-8 sm:p-10 rounded-[3rem] mb-12 border border-gray-100 shadow-soft">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-black text-primary">{t('admin.categories')}</h2>
-          <p className="text-gray-400 text-sm font-medium mt-1.5">{t('admin.category_desc')}</p>
+    <div className="admin-wrap bg-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl border border-gray-100 shadow-soft">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-5">
+        <div className="min-w-0">
+          <h2 className="text-base sm:text-lg font-black text-primary leading-tight">{t('admin.categories')}</h2>
+          <p className="text-gray-400 text-xs font-medium mt-0.5 truncate">{t('admin.category_desc')}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <input
             type="text"
             value={newCategoryNameAr}
             onChange={(e) => setNewCategoryNameAr(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && setPopup({ type: "addCategory" })}
             placeholder={t('admin.add_category_placeholder')}
-            className="w-full md:w-72 h-14 px-5 rounded-2xl bg-gray-50 border border-gray-100 text-sm font-bold outline-none text-right focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all"
+            className="flex-1 sm:w-56 sm:flex-none h-11 px-4 rounded-xl bg-gray-50 border border-gray-100 text-[13px] font-bold outline-none text-right focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
           />
           <button
             onClick={() => setPopup({ type: "addCategory" })}
-            className="w-14 h-14 flex items-center justify-center rounded-2xl bg-primary text-white shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all self-center md:self-auto"
+            className="w-11 h-11 shrink-0 flex items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-px active:translate-y-0 transition-all"
           >
-            <FiPlus size={28} />
+            <FiPlus size={20} />
           </button>
         </div>
       </div>
@@ -386,26 +386,26 @@ const CategorySection: React.FC<Props> = ({
       <button
         onClick={() => setOpenCategories((p) => !p)}
         className="
-          w-full mb-2
+          w-full
           flex items-center justify-between
-          px-6 sm:px-8 py-5
+          px-3 sm:px-4 py-2.5 sm:py-3
           bg-gray-50
-          rounded-4xl
-          font-black text-base text-gray-800
+          rounded-xl
+          font-black text-[13px] text-gray-800
           hover:bg-primary/5 hover:text-primary
-          transition-all border border-gray-100 shadow-inner group
+          transition-all border border-gray-100 group
         "
       >
-        <div className="flex items-center gap-4">
-          <span className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white text-primary flex items-center justify-center shadow-soft transition-transform group-hover:scale-110">
-            <FiChevronDown size={20} className={`transition-transform duration-500 ${openCategories ? "rotate-180" : ""}`} />
+        <div className="flex items-center gap-2.5">
+          <span className="w-8 h-8 rounded-lg bg-white text-primary flex items-center justify-center shadow-soft transition-transform group-hover:scale-105">
+            <FiChevronDown size={16} className={`transition-transform duration-500 ${openCategories ? "rotate-180" : ""}`} />
           </span>
-          <span className="text-lg font-bold">{t('admin.view_all_categories')}</span>
+          <span className="text-[13px] sm:text-sm font-bold">{t('admin.view_all_categories')}</span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] hidden sm:inline">{t('admin.total')}</span>
-          <span className="bg-primary text-white text-[12px] font-black px-4 py-1.5 rounded-xl shadow-lg shadow-primary/20">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.14em] hidden sm:inline">{t('admin.total')}</span>
+          <span className="bg-primary text-white text-[11px] font-black px-3 py-1 rounded-lg shadow-lg shadow-primary/20">
             {categoriesArray.length}
           </span>
         </div>
@@ -420,7 +420,7 @@ const CategorySection: React.FC<Props> = ({
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="pt-10">
+            <div className="pt-3 sm:pt-4">
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -430,7 +430,7 @@ const CategorySection: React.FC<Props> = ({
                   items={categoriesArray.map((c) => c.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {categoriesArray.map((cat) => (
                       <CategoryCard
                         key={cat.id}

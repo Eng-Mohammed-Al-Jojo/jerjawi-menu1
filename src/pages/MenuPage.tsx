@@ -72,7 +72,7 @@ export default function MenuPage() {
           >
             <GlassButton
               variant="featured"
-              icon={<HiSparkles size={18} />}
+              icon={<HiSparkles size={15} />}
               onClick={() => setShowFeaturedModal(true)}
               title={t("menu.featured_items")}
             />
@@ -83,14 +83,14 @@ export default function MenuPage() {
       <main className="flex flex-col flex-1">
 
         {/* Hero Section */}
-        <section className="relative flex flex-col items-center justify-center text-center px-6 pt-14 pb-10 md:pt-20 md:pb-14 overflow-hidden bg-(--linear-gradient(180deg,(--menu-surface),(--menu-bg))) border-b border-(--menu-border)">
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-(--linear-gradient(180deg,transparent,(--menu-bg))) pointer-events-none" />
+        <section className="relative flex flex-col items-center justify-center text-center px-4 pt-8 pb-6 sm:pt-10 sm:pb-8 overflow-hidden bg-(--linear-gradient(180deg,(--menu-surface),(--menu-bg))) border-b border-(--menu-border)">
+          <div className="absolute inset-x-0 bottom-0 h-12 bg-(--linear-gradient(180deg,transparent,(--menu-bg))) pointer-events-none" />
 
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex items-center justify-center w-44 h-44 md:w-60 md:h-60 rounded-3xl bg-(--menu-card-elevated) border border-(--menu-border) shadow-premium"
+            className="relative flex items-center justify-center w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-(--menu-card-elevated) border border-(--menu-border) shadow-premium"
           >
             <motion.img
               initial={{ y: 20, opacity: 0, scale: 0.95 }}
@@ -98,7 +98,7 @@ export default function MenuPage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               style={{ willChange: "transform, opacity" }}
               src={getAssetUrl('logo.png')}
-              className="w-36 h-36 md:w-52 md:h-52 object-contain"
+              className="w-24 h-24 sm:w-32 sm:h-32 object-contain"
               alt="Logo"
             />
           </motion.div>
@@ -108,9 +108,9 @@ export default function MenuPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.6 }}
-            className="mt-5 text-center px-4"
+            className="mt-3 text-center px-4"
           >
-            <h3 className="text-lg font-bold text-(--menu-primary-800) leading-snug">
+            <h3 className="text-[15px] sm:text-base font-bold text-(--menu-primary-800) leading-snug">
               أهلاً بكم في مرطبات الجرجاوي 🧃
             </h3>
 
@@ -121,9 +121,9 @@ export default function MenuPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-4 flex items-center gap-2 px-4 py-2 pl-8 rounded-full border border-(--menu-primary-200) bg-(--menu-primary-50) text-(--menu-primary-800) text-sm font-semibold shadow-sm"
+            className="mt-2.5 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-(--menu-primary-200) bg-(--menu-primary-50) text-(--menu-primary-800) text-xs font-semibold shadow-sm"
           >
-            <span className="w-2 h-2 rounded-full bg-(--menu-primary-500) animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-(--menu-primary-500) animate-pulse" />
             {t("menu.notice.dineIn")}
           </motion.div>
 
